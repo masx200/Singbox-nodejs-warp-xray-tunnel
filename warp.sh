@@ -10,8 +10,8 @@ USQUE_URL="https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs@master/usque.zip"
 # 检查并下载 masque-plus
 if [ ! -f "./masque-plus" ]; then
     echo "下载 masque-plus..."
-    rm masque-plus.zip
-    wget -O masque-plus.zip "$MASQUE_PLUS_URL"
+    rm masque-plus.zip || true
+    wget -v -O masque-plus.zip "$MASQUE_PLUS_URL"
     unzip -o masque-plus.zip
     rm masque-plus.zip
     chmod +x ./masque-plus
@@ -23,8 +23,8 @@ fi
 # 检查并下载 usque
 if [ ! -f "./usque" ]; then
     echo "下载 usque..."
-    rm usque.zip
-    wget -O usque.zip "$USQUE_URL"
+    rm usque.zip || true
+    wget  -v -O usque.zip "$USQUE_URL"
     unzip -o usque.zip
     rm usque.zip
     chmod +x ./usque
