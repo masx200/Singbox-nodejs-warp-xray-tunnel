@@ -118,7 +118,9 @@ chmod 600 "${FILE_PATH}/private.key"
 # ================== 生成 config.json ==================
 cat > "${FILE_PATH}/config.json" <<EOF
 {
-  "log": { "disabled": true },
+
+
+  "log": { "disabled": false ,"level": "info"},
   "inbounds": [$( \
     [ "$TUIC_PORT" != "" ] && [ "$TUIC_PORT" != "0" ] && echo "{
       \"type\": \"tuic\",
@@ -153,7 +155,37 @@ cat > "${FILE_PATH}/config.json" <<EOF
       }
     }"; \
   )],
-  "outbounds": [{"type": "direct"}]
+  "outbounds": [
+  
+  {"type": "direct"},
+  
+  
+  
+   {
+      "type": "socks",
+      "tag": "SOCKS5-PROXY",
+      "server": "127.0.0.1",
+      "server_port": 1080,
+      "version": "5",
+      "username": "g7envpwz14b0u55",
+      "password": "juvytdsdzc225pq"
+    }
+
+
+  ],
+   "route": {
+    "rules": [
+      {
+        "domain": [".*"],
+        "outbound": "SOCKS5-PROXY"
+      },
+      {
+        "protocol": "dns",
+        "outbound": "SOCKS5-PROXY"
+      }
+    ],
+    "final": "SOCKS5-PROXY"
+  }
 }
 EOF
 
