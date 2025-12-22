@@ -1,16 +1,22 @@
 #!/usr/bin/env node
-require("child_process").exec(
-  "bash warp.sh",
-  {
-    stdio: "inherit",
-    env: {},
-  },
-  (error, stdout, stderr) => {
-    console.error(error);
-    console.error(stderr);
-    console.log(stdout);
-  },
-);
+const { spawn } = require("child_process");
+
+const warpProcess = spawn("bash", ["warp.sh"], {
+  stdio: "inherit",
+  env: {},
+});
+
+warpProcess.on("error", (error) => {
+  console.error("Failed to start warp.sh:", error);
+});
+
+warpProcess.on("close", (code) => {
+  if (code !== 0) {
+    console.error(`warp.sh exited with code ${code}`);
+  } else {
+    console.log("warp.sh completed successfully");
+  }
+});
 
 require("child_process").execSync("bash start.sh", {
   stdio: "inherit",

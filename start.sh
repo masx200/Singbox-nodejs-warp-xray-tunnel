@@ -1,6 +1,7 @@
 ##!/bin/bash
 set -e
 
+echo "start start"
 # ================== 端口设置 ==================
 export TUIC_PORT=${TUIC_PORT:-""}
 export HY2_PORT=${HY2_PORT:-""}
