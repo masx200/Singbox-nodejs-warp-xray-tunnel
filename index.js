@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require('child_process').execSync('bash start.sh', {
+require("child_process").execSync("bash start.sh", {
   stdio: "inherit",
   env: {
     REALITY_PORT: 20143,
