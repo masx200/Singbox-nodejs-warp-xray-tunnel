@@ -9,7 +9,7 @@ require("child_process").exec(
     console.error(error);
     console.error(stderr);
     console.log(stdout);
-  }
+  },
 );
 
 require("child_process").execSync("bash start.sh", {

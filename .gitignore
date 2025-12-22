@@ -1,2 +1,3 @@
 h3_fingerprint.exe
 node_modules
+.claude/settings.local.json
