@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { vless_port, xhttp_host, xhttp_path } from "./index.js";
-import { getconfig } from "./config.js";
+// import { getconfig } from "./config.js";
 /**
  * Update xray-config.json with vless configuration
  */
@@ -11,10 +11,10 @@ export function updateXrayConfig({
   vless_selectedAuth,
 }) {
   const configPath = "./xray-config.json";
-  const config = JSON.parse(readFileSync(configPath, "utf8"));
+  const xrayconfig = JSON.parse(readFileSync(configPath, "utf8"));
 
   // Find the vless inbound by protocol
-  const vlessInbound = getconfig().inbounds.find(
+  const vlessInbound = xrayconfig.inbounds.find(
     (inbound) => inbound.protocol === "vless",
   );
   if (!vlessInbound) {
@@ -39,6 +39,6 @@ export function updateXrayConfig({
   vlessInbound.streamSettings.splithttpSettings.path = xhttp_path;
 
   // Write back to file
-  writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+  writeFileSync(configPath, JSON.stringify(xrayconfig, null, 2), "utf8");
   console.log("xray-config.json updated successfully");
 }
