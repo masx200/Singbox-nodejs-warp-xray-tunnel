@@ -33,7 +33,7 @@ export function downloadXray() {
 
     console.log("xray 下载并设置完成");
   } catch (error) {
-    console.error(error)
+    console.error(error);
     throw new Error(`下载 xray 失败: ${error.message}`);
   }
 }

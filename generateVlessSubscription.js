@@ -12,7 +12,7 @@ export function generateVlessSubscription(configPath) {
   const vlessLinks = [];
 
   // 遍历所有 inbound
-  for (const inbound of config.inbounds) {
+  for (const inbound of config().inbounds) {
     // 只处理 vless 协议
     if (inbound.protocol !== "vless") continue;
 
@@ -94,7 +94,7 @@ export function generateVlessSubscription(configPath) {
 if (import.meta.main) {
   // 使用示例
   try {
-    const links = generateVlessSubscription("./xray-config.json");
+    const links = generateVlessSubscription("./xray-config().json");
 
     console.log("=== VLESS 订阅链接 ===");
     links.forEach((link, index) => {
