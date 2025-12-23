@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
+import fs from "fs";
 import { getconfig } from "./config.js";
 import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
@@ -42,7 +43,9 @@ links.forEach((link, index) => {
   console.log(`\n[节点 ${index + 1}]`);
   console.log(link);
 });
-
+fs.writeFileSync("./vless_subscription.txt", links.join("\n"), {
+  encoding: "utf-8",
+});
 const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh"];
 for (const script of scripts) {
   const bashProcess = spawn("bash", [script], {
