@@ -1,28 +1,13 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync } from "fs";
+import { execSync } from "child_process";
 
 const vless_uuid = "1d5c6d92-9ffd-496a-b11c-bfcfffad6afc";
 
 const vless_port = "20143";
 
-
-downloadXray();
-/* xray.exe  vlessenc
-Choose one Authentication to use, do not mix them. Ephemeral key exchange is Post-Quantum safe anyway.
-
-Authentication: X25519, not Post-Quantum
-"decryption": "mlkem768x25519plus.native.600s.6D_EgNNkoIUXjkxKIkwWhJihk9yQUqqALQvzQ762FUA"
-"encryption": "mlkem768x25519plus.native.0rtt.WqJQPNZVgXJnbyjxBsz4QmIMpQ1xA9PUGInnVaBzIFQ"
-
-Authentication: ML-KEM-768, Post-Quantum
-"decryption": "mlkem768x25519plus.native.600s.G272iZot6fUYusTwXnc4Hzd7lLGYI22iuIh5ZGfzhUbbE_27bm-lj6eAGkPZ1KmrQ9Pv3Ypo65a4im1WHX2YSA"
-"encryption": "mlkem768x25519plus.native.0rtt.KfG-_Ai76ZGGWSgEZMOhuHM4r-sMJvMGh9wogqQxAQMtZ5ArBHAA2MQwktWEmdq6U4qCXrCdN5i0ArwqciMlqZXEjRkGLQsFFFE00UGnT7IBOQeCR4C8KopY6vZN8_SR-aCDw_c4z1lr5cmLtDSXYrSf9IAmCUEfONO6XQsSlFKbVYUKvIDHrOgjSZotZ8LG4voxDpm0KRwFNKIjeckInKF2bSiZwowxUrC6wPW-TJYiNQNuWbqXPwVCK5R9AVtxtjrK5cJF7atCF_qbNxsybDQtexZCieoVpBOsJLlfn7ud2paX0fI-hICcSQZyGIxlu8RG4UkEzPkrubx5MuY9NgRe_hoBbGO08SiCNep0Hget9QHMruurOdhquUCPk2ok17qU4OQd1gSYrCdRgRnNGXaH6TEjAzZVKJhIrTVmC3ubgeN8bfevEEY2mCyNsze3ZzCgumgmOEAh_bK98eXHQUCFkKEG2Kxdc8Wva-xUdShF68ZGcYlk0ORwlMKH28NbHasX_YhQBUwhukxLCDiL0uQuHkMdwQZwz1ZetJQ4YmUq7VZ9TlVFh4sISuGPswRnv-F0rFOYzDJBgMpn_Jxai-BWvPMRw9JNPSJ11wY0gJQjuOBGLBtkRaVCl9XIeJYfJ5usgZxKuPSs3FkSMuWqTPYU1XFXbZxk0DdBnqib2xe_s-UpX4YH4gxRsrsh1xqAN0ZIXnIgXKQHUMEja8sV0YswnqCyWbXKhBiOffMf1xeiOjh0XIS_a8Es6NImShKvANoVDTqCOwOpzXo-_gQSRkkTgrPME_p2J2UsLbvNsgNLT6Wpp_ZTJHd0gKgGibZf22LCVGSAYXy1gBaReWktTaw40JoaRkcjKXStXFTBgWhFwIsKXigqBdsgevFeTblhFpQ5veK0i0PInydb5VEJjyQcyWSWgmq5muq0XIKZ36FeChOO0DgeluMP2VUjbLWXkwsi4eWwGpQaQXi4_9RfXxLAdVo3zvdUXFkquFZhkbAxiBREgzi2KBgQxGI-GmSngYyyYSdVaQJi1LU0MzpJd1CYL6cGNDNMynMi4KFRmjsqu4Jv3MlWUEdk6BHL7pcJr6wyPlm4AOR5JgJTBRATXHAngnYGFCNbVVHKOsId7BcklbIj6GxhGOxNX7w1zXipufGYmmIp9Qwjn0u9SFLCLmoKF1VzQlx0_gjMscQ11UoVPoyz_tENvCJ7JiYnymcuqalqBTldd4g2WoQ6YHtk3ok-CTekKhqYKQmLlYMIoEALsUXAXkygjKBDbDAHuCYsFiKvedIGagk2ang9WwBJM-xjO_C4s2Y3hvrPZyyH_Nwx_2UBPbkVMSLOVWqYosFMXCIjvqtZ-NK4dyIh9sUsuexnxhWlU0B-8xlsFDWuvXWUfIQyZXMeBKQN6YBwlRyYS8JZmWWAeqRja1illMcKebGJkhkHTDds4PF870GI7KetvOSTvMY3S5k6DhcOqLq-BPAaBHGK9Sx_rXdoQayJ9QWsv5BVZyZ8ofs6fVFoOdA_IpBssetnGht4GFuAg7cEn8cUZoz2OWtoCn0Tmx0PRsliFG-iwm3SG_CgSJUK0CU" */
-const vless_encryption =
-  "mlkem768x25519plus.native.0rtt.KfG-_Ai76ZGGWSgEZMOhuHM4r-sMJvMGh9wogqQxAQMtZ5ArBHAA2MQwktWEmdq6U4qCXrCdN5i0ArwqciMlqZXEjRkGLQsFFFE00UGnT7IBOQeCR4C8KopY6vZN8_SR-aCDw_c4z1lr5cmLtDSXYrSf9IAmCUEfONO6XQsSlFKbVYUKvIDHrOgjSZotZ8LG4voxDpm0KRwFNKIjeckInKF2bSiZwowxUrC6wPW-TJYiNQNuWbqXPwVCK5R9AVtxtjrK5cJF7atCF_qbNxsybDQtexZCieoVpBOsJLlfn7ud2paX0fI-hICcSQZyGIxlu8RG4UkEzPkrubx5MuY9NgRe_hoBbGO08SiCNep0Hget9QHMruurOdhquUCPk2ok17qU4OQd1gSYrCdRgRnNGXaH6TEjAzZVKJhIrTVmC3ubgeN8bfevEEY2mCyNsze3ZzCgumgmOEAh_bK98eXHQUCFkKEG2Kxdc8Wva-xUdShF68ZGcYlk0ORwlMKH28NbHasX_YhQBUwhukxLCDiL0uQuHkMdwQZwz1ZetJQ4YmUq7VZ9TlVFh4sISuGPswRnv-F0rFOYzDJBgMpn_Jxai-BWvPMRw9JNPSJ11wY0gJQjuOBGLBtkRaVCl9XIeJYfJ5usgZxKuPSs3FkSMuWqTPYU1XFXbZxk0DdBnqib2xe_s-UpX4YH4gxRsrsh1xqAN0ZIXnIgXKQHUMEja8sV0YswnqCyWbXKhBiOffMf1xeiOjh0XIS_a8Es6NImShKvANoVDTqCOwOpzXo-_gQSRkkTgrPME_p2J2UsLbvNsgNLT6Wpp_ZTJHd0gKgGibZf22LCVGSAYXy1gBaReWktTaw40JoaRkcjKXStXFTBgWhFwIsKXigqBdsgevFeTblhFpQ5veK0i0PInydb5VEJjyQcyWSWgmq5muq0XIKZ36FeChOO0DgeluMP2VUjbLWXkwsi4eWwGpQaQXi4_9RfXxLAdVo3zvdUXFkquFZhkbAxiBREgzi2KBgQxGI-GmSngYyyYSdVaQJi1LU0MzpJd1CYL6cGNDNMynMi4KFRmjsqu4Jv3MlWUEdk6BHL7pcJr6wyPlm4AOR5JgJTBRATXHAngnYGFCNbVVHKOsId7BcklbIj6GxhGOxNX7w1zXipufGYmmIp9Qwjn0u9SFLCLmoKF1VzQlx0_gjMscQ11UoVPoyz_tENvCJ7JiYnymcuqalqBTldd4g2WoQ6YHtk3ok-CTekKhqYKQmLlYMIoEALsUXAXkygjKBDbDAHuCYsFiKvedIGagk2ang9WwBJM-xjO_C4s2Y3hvrPZyyH_Nwx_2UBPbkVMSLOVWqYosFMXCIjvqtZ-NK4dyIh9sUsuexnxhWlU0B-8xlsFDWuvXWUfIQyZXMeBKQN6YBwlRyYS8JZmWWAeqRja1illMcKebGJkhkHTDds4PF870GI7KetvOSTvMY3S5k6DhcOqLq-BPAaBHGK9Sx_rXdoQayJ9QWsv5BVZyZ8ofs6fVFoOdA_IpBssetnGht4GFuAg7cEn8cUZoz2OWtoCn0Tmx0PRsliFG-iwm3SG_CgSJUK0CU";
 const vless_selectedAuth = "ML-KEM-768, Post-Quantum";
-const vless_decryption =
-  "mlkem768x25519plus.native.600s.G272iZot6fUYusTwXnc4Hzd7lLGYI22iuIh5ZGfzhUbbE_27bm-lj6eAGkPZ1KmrQ9Pv3Ypo65a4im1WHX2YSA";
 
 const xhttp_host = "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
 
@@ -61,6 +46,73 @@ function downloadXray() {
 
   console.log("xray 下载并设置完成");
 }
+
+/**
+ * Generate vless encryption keys using xray
+ */
+function generateVlessKeys() {
+  const cachePath = "./cache.json";
+
+  // Check if cache exists
+  if (existsSync(cachePath)) {
+    console.log("从缓存读取 vless 配置");
+    const cache = JSON.parse(readFileSync(cachePath, "utf8"));
+    return {vless_selectedAuth,
+      vless_encryption: cache.vless_encryption,
+      vless_decryption: cache.vless_decryption
+    };
+  }
+
+  console.log("生成新的 vless 密钥...");
+
+  // Generate keys using xray vlessenc command
+  try {
+    const output = execSync("./xray vlessenc", { encoding: "utf8" });
+
+    // Find the line with ML-KEM-768, Post-Quantum authentication
+    const authMarker = "Authentication: ML-KEM-768, Post-Quantum";
+    const authIndex = output.indexOf(authMarker);
+
+    if (authIndex === -1) {
+      throw new Error("无法在 xray 输出中找到 ML-KEM-768 Post-Quantum 认证");
+    }
+
+    // Extract the section after the auth marker
+    const section = output.substring(authIndex);
+
+    // Parse encryption and decryption keys from the Post-Quantum section
+    const encryptionMatch = section.match(/"encryption":\s*"([^"]+)"/);
+    const decryptionMatch = section.match(/"decryption":\s*"([^"]+)"/);
+
+    if (!encryptionMatch || !decryptionMatch) {
+      throw new Error("无法从 xray 输出中解析 Post-Quantum 密钥");
+    }
+
+    const vless_encryption = encryptionMatch[1];
+    const vless_decryption = decryptionMatch[1];
+
+    // Save to cache
+    const cache = {
+      vless_encryption,
+      vless_decryption,
+      vless_selectedAuth,
+      generated_at: new Date().toISOString()
+    };
+    writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf8");
+    console.log("vless 密钥生成完成并已缓存");
+
+    return { vless_encryption, vless_decryption,vless_selectedAuth };
+  } catch (error) {
+    console.error("生成 vless 密钥失败:", error.message);
+    throw error;
+  }
+}
+
+// Download xray first (needed for key generation)
+downloadXray();
+
+// Generate or load vless keys
+const { vless_encryption, vless_decryption } = generateVlessKeys();
 
 /**
  * Update xray-config.json with vless configuration
