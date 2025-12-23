@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "warp start"
+echo "tunnel start"
 
 
 cloudflared_url="https://gh-proxy.com/https://github.com/cloudflare/cloudflared/releases/download/2025.11.1/cloudflared-linux-amd64"
