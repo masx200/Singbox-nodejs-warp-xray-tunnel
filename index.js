@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 
 const vless_uuid = "1d5c6d92-9ffd-496a-b11c-bfcfffad6afc";
 
 const vless_port = "20143";
 
 
-
+downloadXray();
 /* xray.exe  vlessenc
 Choose one Authentication to use, do not mix them. Ephemeral key exchange is Post-Quantum safe anyway.
 
@@ -27,6 +27,40 @@ const vless_decryption =
 const xhttp_host = "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
 
 const xhttp_path = "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
+
+/**
+ * Download xray binary using bash commands
+ */
+function downloadXray() {
+  const xrayCoreUrl = "https://gh-proxy.com/https://github.com/XTLS/Xray-core/releases/download/v25.12.8/Xray-linux-64.zip";
+
+  // Check if xray already exists
+  if (existsSync("./xray")) {
+    console.log("xray 已存在，跳过下载");
+    return;
+  }
+
+  console.log("下载 xray...");
+
+  // Download commands using bash -c
+  const commands = [
+    `rm -f xray.zip|| true`,
+    `wget -v -O xray.zip "${xrayCoreUrl}"`,
+    `unzip -o xray.zip`,
+    `rm xray.zip`,
+    `chmod +x ./xray`
+  ];
+
+  for (const cmd of commands) {
+    const result = spawn("bash", ["-c", cmd], { stdio: "inherit" });
+    const exitCode = result.waitForSync();
+    if (exitCode !== 0) {
+      throw new Error(`Command failed: ${cmd}`);
+    }
+  }
+
+  console.log("xray 下载并设置完成");
+}
 
 /**
  * Update xray-config.json with vless configuration
@@ -67,6 +101,9 @@ function updateXrayConfig() {
 
 // Update xray config before running scripts
 updateXrayConfig();
+
+// Download xray before running scripts
+
 
 const scripts = ["warp.sh", "xray.sh", "start.sh"];
 for (const script of scripts) {
