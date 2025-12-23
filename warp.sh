@@ -4,8 +4,8 @@ set -e
 echo "warp start"
 
 # 定义文件下载地址
-MASQUE_PLUS_URL="https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs-warp@main/masque-plus.zip"
-USQUE_URL="https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs-warp@main/usque.zip"
+MASQUE_PLUS_URL="https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs-warp-xray-tunnel@main/masque-plus.zip"
+USQUE_URL="https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs-warp-xray-tunnel@main/usque.zip"
 
 # 检查并下载 masque-plus
 if [ ! -f "./masque-plus" ]; then
@@ -32,6 +32,9 @@ if [ ! -f "./usque" ]; then
 else
     echo "usque 已存在，跳过下载"
 fi
+
+
+
 while true; do
     
     

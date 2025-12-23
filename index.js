@@ -1,32 +1,27 @@
 #!/usr/bin/env node
-const { spawn } = require("child_process");
+import { spawn, execSync } from "child_process";
+const scripts = ["warp.sh", "xray.sh", "start.sh"];
 
-const warpProcess = spawn("bash", ["warp.sh"], {
-  stdio: "inherit",
-  env: {},
-});
-warpProcess.stdout?.on("data", (data) => {
-  console.log("data to start warp.sh:", data);
-});
-warpProcess.stderr?.on("data", (data) => {
-  console.error("stderr to start warp.sh:", data);
-});
-warpProcess.on("error", (error) => {
-  console.error("Failed to start warp.sh:", error);
-});
+for (const script of scripts) {
+  const bashProcess = spawn("bash", [script], {
+    stdio: "inherit",
+    env: { HY2_PORT: 20143 },
+  });
+  bashProcess.stdout?.on("data", (data) => {
+    console.log(`data to start ${script}:`, data);
+  });
+  bashProcess.stderr?.on("data", (data) => {
+    console.error(`stderr to start ${script}:`, data);
+  });
+  bashProcess.on("error", (error) => {
+    console.error(`Failed to start ${script}:`, error);
+  });
 
-warpProcess.on("close", (code) => {
-  if (code !== 0) {
-    console.error(`warp.sh exited with code ${code}`);
-  } else {
-    console.log("warp.sh completed successfully");
-  }
-});
-
-require("child_process").execSync("bash start.sh", {
-  stdio: "inherit",
-  env: {
-    REALITY_PORT: 20143,
-    HY2_PORT: 20143,
-  },
-});
+  bashProcess.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`${script} exited with code ${code}`);
+    } else {
+      console.log(`${script} completed successfully`);
+    }
+  });
+}
