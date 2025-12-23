@@ -11,6 +11,7 @@ const config = {
   vless_port: "20143",
   TUNNEL_TOKEN: "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
 };
+export{config}
 export const vless_port = config.vless_port ?? "20143";
 
 export var vless_selectedAuth = config.vless_selectedAuth ?? "ML-KEM-768, Post-Quantum";
