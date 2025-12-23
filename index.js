@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
+import { config } from "./config.js";
 import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
+import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { updateXrayConfig } from "./updateXrayconfig.js";
-import { config } from "./config.js";
 export { config };
 export const vless_port = config().vless_port ?? "20143";
 
@@ -33,8 +34,6 @@ updateXrayConfig({
   vless_decryption,
   vless_selectedAuth,
 });
-import { generateVlessSubscription } from "./generateVlessSubscription.js";
-import { config } from "./config.js";
 // Download xray before running scripts
 const links = generateVlessSubscription("./xray-config.json");
 
