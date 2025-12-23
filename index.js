@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
-import { config } from "./config.js";
+import { getconfig } from "./config.js";
 import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
 import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { updateXrayConfig } from "./updateXrayconfig.js";
-export { config };
-export const vless_port = config().vless_port ?? "20143";
+export { getconfig as config };
+export const vless_port = getconfig().vless_port ?? "20143";
 
-export var vless_selectedAuth = config().vless_selectedAuth ??
+export var vless_selectedAuth = getconfig().vless_selectedAuth ??
   "ML-KEM-768, Post-Quantum";
 
-export const xhttp_host = config().xhttp_host ??
+export const xhttp_host = getconfig().xhttp_host ??
   "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
 
-export const xhttp_path = config().xhttp_path ??
+export const xhttp_path = getconfig().xhttp_path ??
   "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
 
 // Download xray first (needed for key generation)
@@ -48,9 +48,9 @@ for (const script of scripts) {
   const bashProcess = spawn("bash", [script], {
     stdio: "inherit",
     env: {
-      HY2_PORT: config().HY2_PORT ?? 20143,
+      HY2_PORT: getconfig().HY2_PORT ?? 20143,
 
-      TUNNEL_TOKEN: config().TUNNEL_TOKEN ??
+      TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
         "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
     },
   });

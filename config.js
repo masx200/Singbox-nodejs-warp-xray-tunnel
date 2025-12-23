@@ -1,4 +1,4 @@
-export function config() {
+export function getconfig() {
   const config = {
     vless_selectedAuth: "ML-KEM-768, Post-Quantum",
     HY2_PORT: 20143,

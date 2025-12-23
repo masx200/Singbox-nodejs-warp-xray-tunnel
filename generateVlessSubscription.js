@@ -12,7 +12,7 @@ export function generateVlessSubscription(configPath) {
   const vlessLinks = [];
 
   // 遍历所有 inbound
-  for (const inbound of config().inbounds) {
+  for (const inbound of getconfig().inbounds) {
     // 只处理 vless 协议
     if (inbound.protocol !== "vless") continue;
 
