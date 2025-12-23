@@ -28,11 +28,12 @@ export function downloadXray() {
 
     // Execute each command synchronously
     for (const cmd of commands) {
-      console.log(execSync(cmd, { stdio: "inherit" }).toString());
+      console.log(execSync(cmd, { stdio: "inherit" })?.toString());
     }
 
     console.log("xray 下载并设置完成");
   } catch (error) {
+    console.error(error)
     throw new Error(`下载 xray 失败: ${error.message}`);
   }
 }

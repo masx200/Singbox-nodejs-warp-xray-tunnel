@@ -3,14 +3,21 @@ import { spawn } from "child_process";
 import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
 import { updateXrayConfig } from "./updateXrayConfig.js";
+const config = {
+  vless_selectedAuth: "ML-KEM-768, Post-Quantum",
+  HY2_PORT: 20143,
+  xhttp_path: "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv",
+  xhttp_host: "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io",
+  vless_port: "20143",
+  TUNNEL_TOKEN: "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
+};
+export const vless_port = config.vless_port ?? "20143";
 
-export const vless_port = "20143";
+export var vless_selectedAuth = config.vless_selectedAuth ?? "ML-KEM-768, Post-Quantum";
 
-export var vless_selectedAuth = "ML-KEM-768, Post-Quantum";
+export const xhttp_host = config.xhttp_host ?? "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
 
-export const xhttp_host = "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
-
-export const xhttp_path = "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
+export const xhttp_path = config.xhttp_path ?? "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
 
 // Download xray first (needed for key generation)
 downloadXray();
@@ -44,9 +51,9 @@ for (const script of scripts) {
   const bashProcess = spawn("bash", [script], {
     stdio: "inherit",
     env: {
-      HY2_PORT: 20143,
+      HY2_PORT: config.HY2_PORT ?? 20143,
 
-      "TUNNEL_TOKEN": "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
+      TUNNEL_TOKEN: config.TUNNEL_TOKEN ?? "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
     },
   });
   // bashProcess.stdout?.on("data", (data) => {
