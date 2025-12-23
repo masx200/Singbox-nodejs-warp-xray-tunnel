@@ -33,11 +33,15 @@ links.forEach((link, index) => {
   console.log(link);
 });
 
-const scripts = ["warp.sh", "xray.sh", "start.sh"];
+const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh"];
 for (const script of scripts) {
   const bashProcess = spawn("bash", [script], {
     stdio: "inherit",
-    env: { HY2_PORT: 20143 },
+    env: {
+      HY2_PORT: 20143,
+
+      "TUNNEL_TOKEN": "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
+    },
   });
   // bashProcess.stdout?.on("data", (data) => {
   //   console.log(`data to start ${script}:`, data);
