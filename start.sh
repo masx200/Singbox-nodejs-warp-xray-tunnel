@@ -194,8 +194,8 @@ cat > "${FILE_PATH}/config.json" <<EOF
       "server": "127.0.0.1",
       "server_port": 1080,
       "version": "5",
-      "username": "g7envpwz14b0u55",
-      "password": "juvytdsdzc225pq"
+      "username": "hp40emnw108got6a67p2isj1x65qwjtz60fh5dtl7nhjhor3va",
+      "password": "i7esr1nwxcil034gslw4sdzjyfejfvf5xiaagx4x286nw6l3ff"
     }
 
 
