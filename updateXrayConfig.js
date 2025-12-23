@@ -1,10 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
-import {
-  vless_port,
-  vless_uuid,
-  xhttp_host,
-  xhttp_path,
-} from "./index.js";
+import { vless_port, vless_uuid, xhttp_host, xhttp_path } from "./index.js";
 
 /**
  * Update xray-config.json with vless configuration
@@ -19,7 +14,7 @@ export function updateXrayConfig({
 
   // Find the vless inbound by protocol
   const vlessInbound = config.inbounds.find(
-    (inbound) => inbound.protocol === "vless"
+    (inbound) => inbound.protocol === "vless",
   );
   if (!vlessInbound) {
     throw new Error("VLESS inbound configuration not found");

@@ -23,8 +23,15 @@ var { vless_encryption, vless_decryption, vless_selectedAuth } =
 
 // Update xray config before running scripts
 updateXrayConfig({ vless_encryption, vless_decryption, vless_selectedAuth });
-
+import { generateVlessSubscription } from "./generateVlessSubscription.js";
 // Download xray before running scripts
+const links = generateVlessSubscription("./xray-config.json");
+
+console.log("=== VLESS 订阅链接 ===");
+links.forEach((link, index) => {
+  console.log(`\n[节点 ${index + 1}]`);
+  console.log(link);
+});
 
 const scripts = ["warp.sh", "xray.sh", "start.sh"];
 for (const script of scripts) {

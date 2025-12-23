@@ -14,7 +14,7 @@ export function generateVlessKeys() {
     return {
       vless_selectedAuth,
       vless_encryption: cache.vless_encryption,
-      vless_decryption: cache.vless_decryption
+      vless_decryption: cache.vless_decryption,
     };
   }
 
@@ -51,7 +51,7 @@ export function generateVlessKeys() {
       vless_encryption,
       vless_decryption,
       vless_selectedAuth,
-      generated_at: new Date().toISOString()
+      generated_at: new Date().toISOString(),
     };
     writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf8");
     console.log("vless 密钥生成完成并已缓存");
