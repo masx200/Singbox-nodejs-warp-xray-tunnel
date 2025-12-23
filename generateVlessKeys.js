@@ -1,13 +1,13 @@
 import { execSync } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
-import { getconfig } from "./config.js";
-var vless_selectedAuth = getconfig().vless_selectedAuth ??
-  "ML-KEM-768, Post-Quantum";
+// // import { getconfig } from "./config.js";
+// var vless_selectedAuth = getconfig().vless_selectedAuth ??
+//   "ML-KEM-768, Post-Quantum";
 /**
  * Generate vless encryption keys using xray
  */
-export function generateVlessKeys() {
+export function generateVlessKeys(vless_selectedAuth) {
   const cachePath = "./cache.json";
 
   // Check if cache exists

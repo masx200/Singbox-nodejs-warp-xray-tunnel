@@ -22,7 +22,7 @@ downloadXray();
 
 // Generate or load vless keys and UUID
 var { vless_uuid, vless_encryption, vless_decryption, vless_selectedAuth } =
-  generateVlessKeys();
+  generateVlessKeys(vless_selectedAuth);
 
 // Export vless_uuid for other modules to use
 export { vless_uuid };
