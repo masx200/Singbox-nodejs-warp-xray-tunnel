@@ -18,7 +18,17 @@ if [ ! -f "./cloudflared" ]; then
     chmod +x ./cloudflared
     echo "cloudflared 下载并设置完成"
 else
-    echo "cloudflared 已存在，跳过下载"
+    # 检查文件大小
+    file_size=$(stat -c%s "./cloudflared" 2>/dev/null || stat -f%z "./cloudflared" 2>/dev/null || echo "0")
+    if [ "$file_size" -eq 0 ]; then
+        echo "cloudflared 文件大小为0，删除并重新下载..."
+        rm -f ./cloudflared
+        wget -v -O cloudflared "$cloudflared_url"
+        chmod +x ./cloudflared
+        echo "cloudflared 重新下载完成"
+    else
+        echo "cloudflared 已存在且文件正常 (大小: $file_size bytes)，跳过下载"
+    fi
 fi
 
 
@@ -26,13 +36,13 @@ fi
 
 
 while true; do
-    
-    
-    
-    
+
+
+
+
     ./cloudflared tunnel run
-    
-    
-    
+
+
+
     sleep 10
 done
