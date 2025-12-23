@@ -103,8 +103,8 @@ if (import.meta.main) {
     });
 
     // 也可以输出 base64 格式的订阅内容
-    const base64Links = Buffer.from(links.join("\n")).toString("base64");
-    console.log(`\n=== Base64 订阅内容 ===\n${base64Links}`);
+    // const base64Links = Buffer.from(links.join("\n")).toString("base64");
+    // console.log(`\n=== Base64 订阅内容 ===\n${base64Links}`);
   } catch (error) {
     console.error("处理失败:", error.message);
   }
