@@ -7,12 +7,12 @@ import { readFileSync } from "fs";
 
 export function generateVlessSubscription(configPath) {
   // 读取并解析配置文件
-  const config = JSON.parse(readFileSync(configPath, "utf8"));
+  const xrayconfig = JSON.parse(readFileSync(configPath, "utf8"));
 
   const vlessLinks = [];
 
   // 遍历所有 inbound
-  for (const inbound of getconfig().inbounds) {
+  for (const inbound of xrayconfig.inbounds) {
     // 只处理 vless 协议
     if (inbound.protocol !== "vless") continue;
 
