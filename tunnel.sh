@@ -40,7 +40,7 @@ while true; do
 
 
 
-    ./cloudflared tunnel run
+    ./cloudflared tunnel run --protocol http2
 
 
 
