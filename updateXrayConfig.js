@@ -1,10 +1,11 @@
 import { readFileSync, writeFileSync } from "fs";
-import { vless_port, vless_uuid, xhttp_host, xhttp_path } from "./index.js";
+import { vless_port, xhttp_host, xhttp_path } from "./index.js";
 
 /**
  * Update xray-config.json with vless configuration
  */
 export function updateXrayConfig({
+  vless_uuid,
   vless_encryption,
   vless_decryption,
   vless_selectedAuth,

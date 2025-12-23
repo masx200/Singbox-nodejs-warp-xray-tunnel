@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Generate vless encryption keys using xray
@@ -12,13 +13,18 @@ export function generateVlessKeys() {
     console.log("从缓存读取 vless 配置");
     const cache = JSON.parse(readFileSync(cachePath, "utf8"));
     return {
+      vless_uuid: cache.vless_uuid,
       vless_selectedAuth,
       vless_encryption: cache.vless_encryption,
       vless_decryption: cache.vless_decryption,
     };
   }
 
-  console.log("生成新的 vless 密钥...");
+  console.log("生成新的 vless 密钥和 UUID...");
+
+  // Generate random UUID
+  const vless_uuid = uuidv4();
+  console.log("生成的 UUID:", vless_uuid);
 
   // Generate keys using xray vlessenc command
   try {
@@ -48,15 +54,21 @@ export function generateVlessKeys() {
 
     // Save to cache
     const cache = {
+      vless_uuid,
       vless_encryption,
       vless_decryption,
       vless_selectedAuth,
       generated_at: new Date().toISOString(),
     };
     writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf8");
-    console.log("vless 密钥生成完成并已缓存");
+    console.log("vless 密钥和 UUID 生成完成并已缓存");
 
-    return { vless_encryption, vless_decryption, vless_selectedAuth };
+    return {
+      vless_uuid,
+      vless_encryption,
+      vless_decryption,
+      vless_selectedAuth,
+    };
   } catch (error) {
     console.error("生成 vless 密钥失败:", error.message);
     throw error;

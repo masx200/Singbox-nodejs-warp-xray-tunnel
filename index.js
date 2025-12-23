@@ -4,8 +4,6 @@ import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
 import { updateXrayConfig } from "./updateXrayConfig.js";
 
-export const vless_uuid = "1d5c6d92-9ffd-496a-b11c-bfcfffad6afc";
-
 export const vless_port = "20143";
 
 export var vless_selectedAuth = "ML-KEM-768, Post-Quantum";
@@ -17,12 +15,20 @@ export const xhttp_path = "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
 // Download xray first (needed for key generation)
 downloadXray();
 
-// Generate or load vless keys
-var { vless_encryption, vless_decryption, vless_selectedAuth } =
+// Generate or load vless keys and UUID
+var { vless_uuid, vless_encryption, vless_decryption, vless_selectedAuth } =
   generateVlessKeys();
 
+// Export vless_uuid for other modules to use
+export { vless_uuid };
+
 // Update xray config before running scripts
-updateXrayConfig({ vless_encryption, vless_decryption, vless_selectedAuth });
+updateXrayConfig({
+  vless_uuid,
+  vless_encryption,
+  vless_decryption,
+  vless_selectedAuth,
+});
 import { generateVlessSubscription } from "./generateVlessSubscription.js";
 // Download xray before running scripts
 const links = generateVlessSubscription("./xray-config.json");
