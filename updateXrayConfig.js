@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { vless_port, xhttp_host, xhttp_path } from "./index.js";
 
 /**
- * Update xray-config().json with vless configuration
+ * Update xray-config.json with vless configuration
  */
 export function updateXrayConfig({
   vless_uuid,
@@ -40,5 +40,5 @@ export function updateXrayConfig({
 
   // Write back to file
   writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
-  console.log("xray-config().json updated successfully");
+  console.log("xray-config.json updated successfully");
 }
