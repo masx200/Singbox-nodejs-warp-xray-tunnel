@@ -36,7 +36,7 @@ updateXrayConfig({
 import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { config } from "./config.js";
 // Download xray before running scripts
-const links = generateVlessSubscription("./xray-config().json");
+const links = generateVlessSubscription("./xray-config.json");
 
 console.log("=== VLESS 订阅链接 ===");
 links.forEach((link, index) => {

@@ -10,7 +10,7 @@ export function updateXrayConfig({
   vless_decryption,
   vless_selectedAuth,
 }) {
-  const configPath = "./xray-config().json";
+  const configPath = "./xray-config.json";
   const config = JSON.parse(readFileSync(configPath, "utf8"));
 
   // Find the vless inbound by protocol

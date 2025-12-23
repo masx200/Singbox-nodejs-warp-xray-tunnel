@@ -94,7 +94,7 @@ export function generateVlessSubscription(configPath) {
 if (import.meta.main) {
   // 使用示例
   try {
-    const links = generateVlessSubscription("./xray-config().json");
+    const links = generateVlessSubscription("./xray-config.json");
 
     console.log("=== VLESS 订阅链接 ===");
     links.forEach((link, index) => {
