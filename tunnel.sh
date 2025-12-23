@@ -13,7 +13,7 @@ cloudflared_url="https://gh-proxy.com/https://github.com/cloudflare/cloudflared/
 if [ ! -f "./cloudflared" ]; then
     echo "下载 cloudflared..."
 
-    wget -v -O cloudflared "$cloudflared_core_url"
+    wget -v -O cloudflared "$cloudflared_url"
 
     chmod +x ./cloudflared
     echo "cloudflared 下载并设置完成"
