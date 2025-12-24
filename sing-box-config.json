@@ -1,38 +1,41 @@
 {
   "log": { "disabled": false, "level": "info" },
-  "inbounds": [{
-    "type": "hysteria2",
-    "listen": "::",
-    "listen_port": 20143,
-    "users": [{ "password": "4519a3fa-b2f4-4edc-9fa2-7f9433110665" }],
-    "masquerade": "https://www.bing.com",
-    "tls": {
-      "enabled": true,
-      "alpn": ["h3"],
-      "certificate_path": "/home/container/.npm/cert.pem",
-      "key_path": "/home/container/.npm/private.key"
-    }
-  }, {
-    "type": "vless",
-    "listen": "::",
-    "listen_port": 20143,
-    "users": [
-      {
-        "uuid": "4519a3fa-b2f4-4edc-9fa2-7f9433110665",
-        "flow": "xtls-rprx-vision"
-      }
-    ],
-    "tls": {
-      "enabled": true,
-      "server_name": "www.nazhumi.com",
-      "reality": {
+  "inbounds": [
+    {
+      "type": "hysteria2",
+      "listen": "::",
+      "listen_port": 20143,
+      "users": [{ "password": "4519a3fa-b2f4-4edc-9fa2-7f9433110665" }],
+      "masquerade": "https://www.bing.com",
+      "tls": {
         "enabled": true,
-        "handshake": { "server": "www.nazhumi.com", "server_port": 443 },
-        "private_key": "8IBXlzDxxj8heJzkFpgjOwMK0vRVytxuUUl2SCqCwWM",
-        "short_id": [""]
+        "alpn": ["h3"],
+        "certificate_path": "/home/container/.npm/cert.pem",
+        "key_path": "/home/container/.npm/private.key"
+      }
+    },
+    {
+      "type": "vless",
+      "listen": "::",
+      "listen_port": 20143,
+      "users": [
+        {
+          "uuid": "4519a3fa-b2f4-4edc-9fa2-7f9433110665",
+          "flow": "xtls-rprx-vision"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "www.nazhumi.com",
+        "reality": {
+          "enabled": true,
+          "handshake": { "server": "www.nazhumi.com", "server_port": 443 },
+          "private_key": "8IBXlzDxxj8heJzkFpgjOwMK0vRVytxuUUl2SCqCwWM",
+          "short_id": [""]
+        }
       }
     }
-  }],
+  ],
   "outbounds": [
     { "type": "direct" },
 

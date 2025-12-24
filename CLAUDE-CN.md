@@ -292,7 +292,8 @@ node index.js
 
 ```javascript
 // 修改循环次数以更改路径长度
-for (let i = 0; i < 50; i++) { // 将 50 改为所需长度
+for (let i = 0; i < 50; i++) {
+  // 将 50 改为所需长度
   result += chars.charAt(Math.floor(Math.random() * chars.length));
 }
 ```

@@ -75,17 +75,16 @@ export function generateVlessSubscription(configPath) {
       }
 
       // 构建 VLESS URI
-      const address = streamSettings.network === "splithttp"
-        ? streamSettings.splithttpSettings?.host ||
-          inbound.listen ||
-          "127.0.0.1"
-        : inbound.listen || "127.0.0.1";
+      const address =
+        streamSettings.network === "splithttp"
+          ? streamSettings.splithttpSettings?.host ||
+            inbound.listen ||
+            "127.0.0.1"
+          : inbound.listen || "127.0.0.1";
 
-      const vlessUrl = `vless://${id}@${address}:${port}?${params.toString()}#${
-        encodeURIComponent(
-          email || "vless",
-        )
-      }`;
+      const vlessUrl = `vless://${id}@${address}:${port}?${params.toString()}#${encodeURIComponent(
+        email || "vless",
+      )}`;
       vlessLinks.push(vlessUrl);
     }
   }
