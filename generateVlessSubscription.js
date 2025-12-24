@@ -39,12 +39,12 @@ export function generateVlessSubscription(configPath) {
       params.set("type", type);
 
       // 根据传输类型添加特定参数
-      if (type === "splithttp" && streamSettings.splithttpSettings) {
-        const splithttp = streamSettings.splithttpSettings;
-        if (splithttp.host) params.set("host", splithttp.host);
-        if (splithttp.path) params.set("path", splithttp.path);
+      if (type === "xhttp" && streamSettings.xhttpSettings) {
+        const xhttp = streamSettings.xhttpSettings;
+        if (xhttp.host) params.set("host", xhttp.host);
+        if (xhttp.path) params.set("path", xhttp.path);
 
-        if (splithttp.mode) params.set("mode", splithttp.mode);
+        if (xhttp.mode) params.set("mode", xhttp.mode);
         params.set("type", "xhttp");
       } else if (type === "ws" && streamSettings.wsSettings) {
         const ws = streamSettings.wsSettings;
@@ -76,8 +76,8 @@ export function generateVlessSubscription(configPath) {
 
       // 构建 VLESS URI
       const address =
-        streamSettings.network === "splithttp"
-          ? streamSettings.splithttpSettings?.host ||
+        streamSettings.network === "xhttp"
+          ? streamSettings.xhttpSettings?.host ||
             inbound.listen ||
             "127.0.0.1"
           : inbound.listen || "127.0.0.1";

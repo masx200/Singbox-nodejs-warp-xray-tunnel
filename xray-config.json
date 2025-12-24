@@ -41,9 +41,9 @@
         "routeOnly": false
       },
       "streamSettings": {
-        "network": "splithttp",
+        "network": "xhttp",
         "security": "none",
-        "splithttpSettings": {
+        "xhttpSettings": {
           "mode": "auto",
           "acceptProxyProtocol": false,
           "headers": {},

@@ -36,9 +36,9 @@ export function updateXrayConfig({
   vlessInbound.settings.selectedAuth = vless_selectedAuth;
   vlessInbound.settings.decryption = vless_decryption;
 
-  // Update splithttp settings
-  vlessInbound.streamSettings.splithttpSettings.host = xhttp_host;
-  vlessInbound.streamSettings.splithttpSettings.path = xhttp_path;
+  // Update xhttp settings
+  vlessInbound.streamSettings.xhttpSettings.host = xhttp_host;
+  vlessInbound.streamSettings.xhttpSettings.path = xhttp_path;
 
   // Write back to file
   writeFileSync(configPath, JSON.stringify(xrayconfig, null, 2), "utf8");
