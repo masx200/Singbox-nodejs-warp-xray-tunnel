@@ -1,7 +1,8 @@
 import { execSync } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
-// // import { getconfig } from "./config.js";
+import path from "path";
+// // import { getconfig } from path.resolve("./config.js";
 // var vless_selectedAuth = getconfig().vless_selectedAuth ??
 //   "ML-KEM-768, Post-Quantum";
 
@@ -12,7 +13,7 @@ import { generateRandomPath } from "./generateRandomPath.js";
  * Generate vless encryption keys using xray
  */
 export function generateVlessKeys(vless_selectedAuth) {
-  const cachePath = "./cache.json";
+  const cachePath = path.resolve("./cache.json");
 
   // Check if cache exists
   if (existsSync(cachePath)) {
@@ -27,6 +28,7 @@ export function generateVlessKeys(vless_selectedAuth) {
         xhttp_path: cache.xhttp_path,
       };
     } catch (error) {
+      console.error(error);
       console.error("读取缓存失败:", error.message);
       console.log("缓存文件已损坏，将生成新的密钥和 UUID");
       // 继续执行，生成新的密钥
@@ -47,7 +49,9 @@ export function generateVlessKeys(vless_selectedAuth) {
 
   // Generate keys using xray vlessenc command
   try {
-    const output = execSync("./xray vlessenc", { encoding: "utf8" });
+    const output = execSync(path.resolve("./xray") + " vlessenc", {
+      encoding: "utf8",
+    });
 
     // Find the line with ML-KEM-768, Post-Quantum authentication
     const authMarker = "Authentication: ML-KEM-768, Post-Quantum";
@@ -91,6 +95,7 @@ export function generateVlessKeys(vless_selectedAuth) {
       xhttp_path,
     };
   } catch (error) {
+    console.error(error);
     console.error("生成 vless 密钥失败:", error.message);
     console.error(error);
     throw error;

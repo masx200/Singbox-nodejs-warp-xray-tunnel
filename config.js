@@ -1,4 +1,4 @@
-// import { generateRandomPath } from "./generateRandomPath.js";
+// import { generateRandomPath } from path.resolve("./generateRandomPath.js";
 
 export function getconfig() {
   const config = {

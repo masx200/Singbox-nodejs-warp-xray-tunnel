@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from "child_process";
 import fs from "fs";
+import path from "path";
 import { getconfig } from "./config.js";
 import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
@@ -37,18 +38,25 @@ updateXrayConfig({
   vless_selectedAuth,
 });
 // Download xray before running scripts
-const links = generateVlessSubscription("./xray-config.json");
+const links = generateVlessSubscription(path.resolve("./xray-config.json"));
 
 console.log("=== VLESS 订阅链接 ===");
 links.forEach((link, index) => {
   console.log(`\n[节点 ${index + 1}]`);
   console.log(link);
 });
-fs.writeFileSync("./vless_subscription.txt", links.join("\n"), {
+fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
 });
 const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh"];
-for (const script of scripts) {
+
+// 存储所有进程引用
+const processes = new Map();
+
+// 启动脚本的函数
+function startScript(script) {
+  console.log(`启动脚本: ${script}`);
+
   const bashProcess = spawn("bash", [script], {
     stdio: "inherit",
     env: {
@@ -58,21 +66,52 @@ for (const script of scripts) {
         "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
     },
   });
-  // bashProcess.stdout?.on("data", (data) => {
-  //   console.log(`data to start ${script}:`, data);
-  // });
-  // bashProcess.stderr?.on("data", (data) => {
-  //   console.error(`stderr to start ${script}:`, data);
-  // });
+
+  // 存储进程引用
+  processes.set(script, bashProcess);
+
   bashProcess.on("error", (error) => {
-    console.error(`Failed to start ${script}:`, error);
+    console.error(`启动 ${script} 失败:`, error);
+    // 5秒后重启
+    console.log(`5秒后尝试重启 ${script}...`);
+    setTimeout(() => startScript(script), 5000);
   });
 
   bashProcess.on("close", (code) => {
     if (code !== 0) {
-      console.error(`${script} exited with code ${code}`);
+      console.error(`${script} 异常退出，退出码: ${code}`);
+      // 5秒后重启
+      console.log(`5秒后尝试重启 ${script}...`);
+      setTimeout(() => startScript(script), 5000);
     } else {
-      console.log(`${script} completed successfully`);
+      console.log(`${script} 正常完成`);
+      // 正常退出也重启（保持服务运行）
+      console.log(`5秒后重启 ${script}...`);
+      setTimeout(() => startScript(script), 5000);
     }
   });
 }
+
+// 启动所有脚本
+for (const script of scripts) {
+  startScript(script);
+}
+
+// 处理主进程退出信号
+process.on("SIGINT", () => {
+  console.log("\n收到 SIGINT 信号，正在关闭所有进程...");
+  for (const [script, proc] of processes) {
+    console.log(`停止 ${script}...`);
+    proc.kill();
+  }
+  process.exit(0);
+});
+
+process.on("SIGTERM", () => {
+  console.log("\n收到 SIGTERM 信号，正在关闭所有进程...");
+  for (const [script, proc] of processes) {
+    console.log(`停止 ${script}...`);
+    proc.kill();
+  }
+  process.exit(0);
+});

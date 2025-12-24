@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import path from "path";
 /**
  * 从 Xray 配置文件生成 VLESS 订阅链接
  * @param {string} configPath - Xray 配置文件路径
@@ -94,7 +95,7 @@ export function generateVlessSubscription(configPath) {
 if (import.meta.main) {
   // 使用示例
   try {
-    const links = generateVlessSubscription("./xray-config.json");
+    const links = generateVlessSubscription(path.resolve("./xray-config.json"));
 
     console.log("=== VLESS 订阅链接 ===");
     links.forEach((link, index) => {
@@ -106,6 +107,7 @@ if (import.meta.main) {
     // const base64Links = Buffer.from(links.join("\n")).toString("base64");
     // console.log(`\n=== Base64 订阅内容 ===\n${base64Links}`);
   } catch (error) {
+    console.error(error);
     console.error("处理失败:", error.message);
   }
 }

@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync } from "fs";
-
+import path from "path";
 /**
  * Download xray binary using bash commands
  */
@@ -9,7 +9,7 @@ export function downloadXray() {
     "https://gh-proxy.com/https://github.com/XTLS/Xray-core/releases/download/v25.12.8/Xray-linux-64.zip";
 
   // Check if xray already exists
-  if (existsSync("./xray")) {
+  if (existsSync(path.resolve("./xray"))) {
     console.log("xray 已存在，跳过下载");
     return;
   }
@@ -28,11 +28,14 @@ export function downloadXray() {
 
     // Execute each command synchronously
     for (const cmd of commands) {
-      console.log(execSync(cmd, { stdio: "inherit" ,encoding: "utf8" })?.toString());
+      console.log(
+        execSync(cmd, { stdio: "inherit", encoding: "utf8" })?.toString(),
+      );
     }
 
     console.log("xray 下载并设置完成");
   } catch (error) {
+    console.error(error);
     console.error(error);
     throw new Error(`下载 xray 失败: ${error.message}`);
   }
