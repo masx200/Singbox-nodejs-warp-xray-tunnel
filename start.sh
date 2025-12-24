@@ -222,7 +222,7 @@ SINGBOX_PID=$!
 echo "[SING-BOX] 启动完成 PID=$SINGBOX_PID"
 
 # ================== 获取 IP & ISP ==================
-IP=$(curl -s --max-time 2 ipv4.ip.sb || curl -s --max-time 1 api.ipify.org || echo "IP_ERROR")
+IP=$(curl -s --max-time 20   https://api-ipv4.ip.sb/ip -H "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" || curl -s --max-time 1 api.ipify.org || echo "IP_ERROR")
 ISP=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F'"' '{print $26"-"$18}' || echo "0.0")
 
 # ================== 生成订阅 ==================
@@ -230,6 +230,7 @@ ISP=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F'"' '{print
  # ================== 计算 pinSHA256 ==================
   # Hysteria2 需要整个证书的 SHA256，而不仅仅是公钥
   PINSHA256=$(openssl x509 -in "${FILE_PATH}/cert.pem" -outform DER 2>/dev/null | openssl dgst -sha256 -hex 2>/dev/null | awk '{print $2}')
+
 > "${FILE_PATH}/list.txt"
 [ "$TUIC_PORT" != "" ] && [ "$TUIC_PORT" != "0" ] && echo "tuic://${UUID}:admin@${IP}:${TUIC_PORT}?sni=www.bing.com&alpn=h3&congestion_control=bbr&allowInsecure=1#TUIC-${ISP}" >> "${FILE_PATH}/list.txt"
 [ "$HY2_PORT" != "" ] && [ "$HY2_PORT" != "0" ] && echo "hysteria2://${UUID}@${IP}:${HY2_PORT}/?sni=www.bing.com&pinSHA256=${PINSHA256}&insecure=1#Hysteria2-${ISP}" >> "${FILE_PATH}/list.txt"
@@ -265,7 +266,7 @@ schedule_restart() {
       echo "[Sing-box重启完成] 新 PID: $SINGBOX_PID"
     fi
 
-    sleep 1
+    sleep 10
   done
 }
 
