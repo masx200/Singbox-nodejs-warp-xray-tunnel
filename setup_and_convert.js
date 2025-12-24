@@ -77,7 +77,7 @@ async function installDos2Unix() {
 
   const dos2unixPath = resolve("./usr/bin/dos2unix");
   const dos2unixZipPath = resolve("dos2unix.zip");
-  const usrBinDir = resolve(".\\usr\\bin");
+  const usrBinDir = resolve("./usr/bin");
 
   // 检查 dos2unix 是否已存在
   if (existsSync(dos2unixPath)) {
