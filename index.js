@@ -15,7 +15,7 @@ export var vless_selectedAuth = getconfig().vless_selectedAuth ??
 export const xhttp_host = getconfig().xhttp_host ??
   "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
 
-export const xhttp_path = getconfig().xhttp_path ??
+export const xhttp_path = generateVlessKeys().xhttp_path ??
   "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
 
 // Download xray first (needed for key generation)
@@ -33,6 +33,7 @@ updateXrayConfig({
   vless_uuid,
   vless_encryption,
   vless_decryption,
+  xhttp_path,
   vless_selectedAuth,
 });
 // Download xray before running scripts

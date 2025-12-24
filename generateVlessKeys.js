@@ -4,6 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 // // import { getconfig } from "./config.js";
 // var vless_selectedAuth = getconfig().vless_selectedAuth ??
 //   "ML-KEM-768, Post-Quantum";
+
+// 生成50位随机字符串（数字和小写字母）
+import { generateRandomPath } from "./generateRandomPath.js";
+
 /**
  * Generate vless encryption keys using xray
  */
@@ -19,6 +23,7 @@ export function generateVlessKeys(vless_selectedAuth) {
       vless_selectedAuth,
       vless_encryption: cache.vless_encryption,
       vless_decryption: cache.vless_decryption,
+      xhttp_path: cache.xhttp_path,
     };
   }
 
@@ -27,6 +32,10 @@ export function generateVlessKeys(vless_selectedAuth) {
   // Generate random UUID
   const vless_uuid = uuidv4();
   console.log("生成的 UUID:", vless_uuid);
+
+  // Generate random xhttp_path
+  const xhttp_path = generateRandomPath();
+  console.log("生成的 xhttp_path:", xhttp_path);
 
   // Generate keys using xray vlessenc command
   try {
@@ -60,6 +69,7 @@ export function generateVlessKeys(vless_selectedAuth) {
       vless_encryption,
       vless_decryption,
       vless_selectedAuth,
+      xhttp_path,
       generated_at: new Date().toISOString(),
     };
     writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf8");
@@ -70,9 +80,11 @@ export function generateVlessKeys(vless_selectedAuth) {
       vless_encryption,
       vless_decryption,
       vless_selectedAuth,
+      xhttp_path,
     };
   } catch (error) {
     console.error("生成 vless 密钥失败:", error.message);
+    console.error(error);
     throw error;
   }
 }

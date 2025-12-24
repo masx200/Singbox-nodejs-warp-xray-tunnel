@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
-import { vless_port, xhttp_host, xhttp_path } from "./index.js";
+import { vless_port, xhttp_host /* xhttp_path */ } from "./index.js";
 // import { getconfig } from "./config.js";
 /**
  * Update xray-config.json with vless configuration
@@ -8,6 +8,7 @@ export function updateXrayConfig({
   vless_uuid,
   vless_encryption,
   vless_decryption,
+  xhttp_path,
   vless_selectedAuth,
 }) {
   const configPath = "./xray-config.json";
