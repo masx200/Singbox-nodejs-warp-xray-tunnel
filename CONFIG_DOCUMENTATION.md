@@ -129,7 +129,7 @@ Hysteria2、VLESS (Reality) 协议，并提供灵活的流量路由功能。
 ```json
 {
   "type": "socks",
-  "tag": "SOCKS5-PROXY",
+  "tag": "warp-PROXY",
   "server": "127.0.0.1",
   "server_port": 1080,
   "version": "5",
@@ -155,14 +155,14 @@ Hysteria2、VLESS (Reality) 协议，并提供灵活的流量路由功能。
   "rules": [
     {
       "domain": [".*"],
-      "outbound": "SOCKS5-PROXY"
+      "outbound": "warp-PROXY"
     },
     {
       "protocol": "dns",
-      "outbound": "SOCKS5-PROXY"
+      "outbound": "warp-PROXY"
     }
   ],
-  "final": "SOCKS5-PROXY"
+  "final": "warp-PROXY"
 }
 ```
 
@@ -170,16 +170,16 @@ Hysteria2、VLESS (Reality) 协议，并提供灵活的流量路由功能。
 
 | 规则类型 | 匹配条件          | 目标出站     | 描述              |
 | -------- | ----------------- | ------------ | ----------------- |
-| 域名规则 | `domain: [".*"]`  | SOCKS5-PROXY | 匹配所有域名流量  |
-| 协议规则 | `protocol: "dns"` | SOCKS5-PROXY | 匹配 DNS 查询流量 |
+| 域名规则 | `domain: [".*"]`  | warp-PROXY | 匹配所有域名流量  |
+| 协议规则 | `protocol: "dns"` | warp-PROXY | 匹配 DNS 查询流量 |
 
 #### 4.2 默认路由 (Final)
 
 ```json
-"final": "SOCKS5-PROXY"
+"final": "warp-PROXY"
 ```
 
-所有未被规则明确匹配的流量都将通过 SOCKS5-PROXY 出站。
+所有未被规则明确匹配的流量都将通过 warp-PROXY 出站。
 
 ## 安全特性
 
@@ -212,8 +212,8 @@ Hysteria2、VLESS (Reality) 协议，并提供灵活的流量路由功能。
 
 1. **入站流量** → 客户端通过 Hysteria2 或 VLESS 协议连接到 20143 端口
 2. **路由匹配** → 根据路由规则匹配流量类型
-3. **出站转发** → 匹配的流量通过 SOCKS5-PROXY (127.0.0.1:1080) 转发
-4. **最终路由** → 未匹配的流量也通过 SOCKS5-PROXY 处理
+3. **出站转发** → 匹配的流量通过 warp-PROXY (127.0.0.1:1080) 转发
+4. **最终路由** → 未匹配的流量也通过 warp-PROXY 处理
 
 ## 配置维护
 

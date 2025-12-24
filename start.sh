@@ -190,7 +190,7 @@ cat > "${FILE_PATH}/config.json" <<EOF
   
    {
       "type": "socks",
-      "tag": "SOCKS5-PROXY",
+      "tag": "warp-PROXY",
       "server": "127.0.0.1",
       "server_port": 1080,
       "version": "5",
@@ -204,14 +204,14 @@ cat > "${FILE_PATH}/config.json" <<EOF
     "rules": [
       {
         "domain": [".*"],
-        "outbound": "SOCKS5-PROXY"
+        "outbound": "warp-PROXY"
       },
       {
         "protocol": "dns",
-        "outbound": "SOCKS5-PROXY"
+        "outbound": "warp-PROXY"
       }
     ],
-    "final": "SOCKS5-PROXY"
+    "final": "warp-PROXY"
   }
 }
 EOF
