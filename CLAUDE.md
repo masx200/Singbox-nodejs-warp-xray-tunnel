@@ -38,6 +38,32 @@ automatic daily restart functionality for cache clearing.
      fingerprint
    - Used for certificate validation in Hysteria2 protocol configuration
 
+5. **generateVlessKeys.js** - VLESS encryption key generation module
+   - Uses xray-core to generate ML-KEM-768 Post-Quantum encryption keys
+   - Generates random UUID for VLESS authentication
+   - Generates random 50-character xhttp_path (numbers and lowercase letters)
+   - Implements caching mechanism to persist keys in cache.json
+   - Returns cached values if available, generates new ones if not
+
+6. **generateRandomPath.js** - Random path generation utility
+   - Generates 50-character random strings for xhttp_path
+   - Uses numbers (0-9) and lowercase letters (a-z)
+   - Returns path starting with "/" for use in HTTP obfuscation
+
+7. **updateXrayconfig.js** - Xray configuration updater
+   - Updates xray-config.json with generated VLESS credentials
+   - Integrates vless_uuid, encryption keys, and xhttp_path
+   - Supports ML-KEM-768 Post-Quantum authentication
+
+8. **downloadXray.js** - Xray-core binary downloader
+   - Downloads platform-specific xray-core binary
+   - Ensures xray is available before key generation
+
+9. **generateVlessSubscription.js** - VLESS subscription URL generator
+   - Generates subscription URLs from VLESS configuration
+   - Outputs to vless.txt for client import
+   - Supports standard VLESS protocol format
+
 ### Protocol Configuration
 
 The service supports three proxy protocols:
@@ -62,20 +88,30 @@ certificates.
 
 ```
 /
-├── index.js          # Main Node.js entry point
-├── package.json      # Node.js project configuration
-├── warp.sh           # Proxy tool download and execution
-├── start.sh          # Main service configuration script
-├── h3_fingerprint.go # Certificate fingerprint utility
-├── go.mod           # Go module dependencies
-├── .gitignore       # Git ignore rules
-├── README.md        # User documentation
-└── .npm/            # Runtime directory (created at runtime)
-    ├── uuid.txt     # Persistent UUID storage
-    ├── key.txt      # Reality keypair storage
-    ├── config.json  # sing-box configuration
-    ├── list.txt     # Subscription URLs
-    └── sub.txt      # Base64-encoded subscription
+├── index.js                     # Main Node.js entry point
+├── package.json                 # Node.js project configuration
+├── config.js                    # Configuration constants
+├── generateVlessKeys.js         # VLESS key generation module
+├── generateRandomPath.js        # Random path generation utility
+├── updateXrayconfig.js          # Xray configuration updater
+├── downloadXray.js              # Xray binary downloader
+├── generateVlessSubscription.js # Subscription URL generator
+├── warp.sh                      # Proxy tool download and execution
+├── start.sh                     # Main service configuration script
+├── h3_fingerprint.go            # Certificate fingerprint utility
+├── go.mod                       # Go module dependencies
+├── .gitignore                   # Git ignore rules
+├── README.md                    # User documentation
+├── CLAUDE.md                    # AI assistant context
+├── cache.json                   # VLESS keys cache (generated)
+├── xray-config.json             # Xray configuration (generated)
+├── vless.txt                    # VLESS subscription URL (generated)
+└── .npm/                        # Runtime directory (created at runtime)
+    ├── uuid.txt                 # Persistent UUID storage
+    ├── key.txt                  # Reality keypair storage
+    ├── config.json              # sing-box configuration
+    ├── list.txt                 # Subscription URLs
+    └── sub.txt                  # Base64-encoded subscription
 ```
 
 ### Environment Variables
@@ -83,6 +119,26 @@ certificates.
 - `TUIC_PORT` - Port for TUIC protocol (optional, defaults to empty)
 - `HY2_PORT` - Port for Hysteria2 protocol (optional, defaults to empty)
 - `REALITY_PORT` - Port for Reality protocol (optional, defaults to empty)
+
+### VLESS Configuration
+
+The project now supports VLESS protocol with advanced security features:
+
+- **Post-Quantum Encryption**: Uses ML-KEM-768 (Module-Lattice-Based Key Encapsulation Mechanism)
+- **Dynamic Path Generation**: Random 50-character xhttp_path for each installation
+- **Key Caching**: Encryption keys and paths cached in cache.json for persistence
+- **Xray Integration**: Leverages xray-core's vlessenc for secure key generation
+
+**Generated Credentials**:
+- `vless_uuid`: Unique identifier for VLESS authentication
+- `vless_encryption`: Public key for encryption
+- `vless_decryption`: Private key for decryption
+- `xhttp_path`: Random HTTP path for obfuscation (50 chars, a-z0-9)
+
+**Configuration Files**:
+- `xray-config.json`: Xray-core configuration with VLESS settings
+- `cache.json`: Persistent storage for generated keys and paths
+- `vless.txt`: Subscription URL for client import
 
 ## Common Development Commands
 
@@ -138,6 +194,15 @@ go run h3_fingerprint.go
 - UUID generated once and persisted in .npm/uuid.txt
 - Reality keypair generated once and persisted in .npm/key.txt
 - Both files have 600 permissions for security
+
+### VLESS Key Management
+
+- VLESS keys generated using xray-core's vlessenc command
+- ML-KEM-768 Post-Quantum encryption for forward secrecy
+- Keys cached in cache.json for persistence across restarts
+- xhttp_path randomly generated (50 chars, a-z0-9) for obfuscation
+- If cache.json exists, keys are reused instead of regenerated
+- Delete cache.json to force regeneration of all keys
 
 ### Architecture Detection and Downloads
 
