@@ -15,18 +15,29 @@ import { generateRandomPath } from "./generateRandomPath.js";
 export function generateVlessKeys(vless_selectedAuth) {
   const cachePath = path.resolve("./cache.json");
 
-  // Check if cache exists
+  // Check if cache exists and has valid values
   if (existsSync(cachePath)) {
     console.log("从缓存读取 vless 配置");
     try {
       const cache = JSON.parse(readFileSync(cachePath, "utf8"));
-      return {
-        vless_uuid: cache.vless_uuid,
-        vless_selectedAuth,
-        vless_encryption: cache.vless_encryption,
-        vless_decryption: cache.vless_decryption,
-        xhttp_path: cache.xhttp_path,
-      };
+
+      // Check if all required fields are present and not empty
+      if (
+        cache.vless_uuid &&
+        cache.vless_encryption &&
+        cache.vless_decryption &&
+        cache.xhttp_path
+      ) {
+        return {
+          vless_uuid: cache.vless_uuid,
+          vless_selectedAuth,
+          vless_encryption: cache.vless_encryption,
+          vless_decryption: cache.vless_decryption,
+          xhttp_path: cache.xhttp_path,
+        };
+      } else {
+        console.log("缓存中的值不完整，将生成新的密钥和 UUID");
+      }
     } catch (error) {
       console.error(error);
       console.error("读取缓存失败:", error.message);
