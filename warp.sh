@@ -38,9 +38,13 @@ fi
 while true; do
     
     
+       ./masque-plus "-bind" "0.0.0.0:1080" "-username" "hp40emnw108got6a67p2isj1x65qwjtz60fh5dtl7nhjhor3va" "--password" "i7esr1nwxcil034gslw4sdzjyfejfvf5xiaagx4x286nw6l3ff"  "-sni"  "gitlab.io" "-dns" "1.1.1.1,8.8.8.8,94.140.14.140" "-scan" "-4"                "-range4"                   "162.159.199.2/32"
     
     
-    ./masque-plus "-bind" "0.0.0.0:1080" "-username" "hp40emnw108got6a67p2isj1x65qwjtz60fh5dtl7nhjhor3va" "--password" "i7esr1nwxcil034gslw4sdzjyfejfvf5xiaagx4x286nw6l3ff" "-endpoint" "162.159.199.2:443" "-sni"  "gitlab.io" "-dns" "1.1.1.1,8.8.8.8,94.140.14.140"
+    
+    sleep 10
+    
+    ./masque-plus "-bind" "0.0.0.0:1080" "-username" "hp40emnw108got6a67p2isj1x65qwjtz60fh5dtl7nhjhor3va" "--password" "i7esr1nwxcil034gslw4sdzjyfejfvf5xiaagx4x286nw6l3ff"  "-sni"  "gitlab.io" "-dns" "1.1.1.1,8.8.8.8,94.140.14.140" "-scan" "-4"                "-range4"                   "162.159.198.2/32"
     
     
     
