@@ -28,7 +28,7 @@ export function downloadXray() {
 
     // Execute each command synchronously
     for (const cmd of commands) {
-      console.log(execSync(cmd, { stdio: "inherit" })?.toString());
+      console.log(execSync(cmd, { stdio: "inherit" ,encoding: "utf8" })?.toString());
     }
 
     console.log("xray 下载并设置完成");
