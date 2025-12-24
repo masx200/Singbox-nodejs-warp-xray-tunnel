@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+import { downloadXray } from "./downloadXray.js";
 // // import { getconfig } from path.resolve("./config.js";
 // var vless_selectedAuth = getconfig().vless_selectedAuth ??
 //   "ML-KEM-768, Post-Quantum";
@@ -13,6 +14,7 @@ import { generateRandomPath } from "./generateRandomPath.js";
  * Generate vless encryption keys using xray
  */
 export function generateVlessKeys(vless_selectedAuth) {
+  downloadXray();
   const cachePath = path.resolve("./cache.json");
 
   // Check if cache exists and has valid values
