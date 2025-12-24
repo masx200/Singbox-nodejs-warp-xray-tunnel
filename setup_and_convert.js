@@ -75,7 +75,7 @@ async function extractZip(zipPath, destDir) {
 async function installDos2Unix() {
   console.log("正在检查并安装 dos2unix...");
 
-  const dos2unixPath = resolve("./usr/bin/dos2unix");
+  const dos2unixPath = resolve("./usr/bin/usr/bin/dos2unix");
   const dos2unixZipPath = resolve("dos2unix.zip");
   const usrBinDir = resolve("./usr/bin");
 
@@ -138,7 +138,7 @@ async function convertShFiles(directory = ".") {
   console.log(`正在 "${absolutePath}" 中递归查找并转换所有 .sh 文件...`);
 
   // 使用本地下载的 dos2unix 路径
-  const dos2unixPath = resolve("./usr/bin/dos2unix");
+  const dos2unixPath = resolve("./usr/bin/usr/bin/dos2unix");
 
   try {
     // 使用 find 和 xargs 是处理大量文件最高效和最安全的方式
