@@ -22,9 +22,9 @@ async function installDos2Unix() {
     console.log("dos2unix 未找到，开始安装...");
     try {
       // -y 标志会自动回答 "yes" 来确认安装
-      // 注意：这个命令需要 sudo 权限
+      // 注意：这个命令需要  权限
       const { stdout, stderr } = await execPromise(
-        "sudo apt-get update && sudo apt-get install -y dos2unix"
+        " apt-get update &&  apt-get install -y dos2unix"
       );
       console.log({ stdout, stderr });
       console.log("dos2unix 安装成功！");
