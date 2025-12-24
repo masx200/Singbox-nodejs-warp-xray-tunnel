@@ -369,7 +369,7 @@ UUID: [从 .npm/uuid.txt 获取]
 检查网络连接和 CDN 可用性：
 
 ```bash
-curl -I https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs@master/
+curl -I https://cdn.jsdelivr.net/gh/masx200/singbox-nodejs-warp-xray-tunnel@main/
 ```
 
 </details>
