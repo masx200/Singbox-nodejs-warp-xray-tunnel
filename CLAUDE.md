@@ -124,18 +124,23 @@ certificates.
 
 The project now supports VLESS protocol with advanced security features:
 
-- **Post-Quantum Encryption**: Uses ML-KEM-768 (Module-Lattice-Based Key Encapsulation Mechanism)
-- **Dynamic Path Generation**: Random 50-character xhttp_path for each installation
-- **Key Caching**: Encryption keys and paths cached in cache.json for persistence
+- **Post-Quantum Encryption**: Uses ML-KEM-768 (Module-Lattice-Based Key
+  Encapsulation Mechanism)
+- **Dynamic Path Generation**: Random 50-character xhttp_path for each
+  installation
+- **Key Caching**: Encryption keys and paths cached in cache.json for
+  persistence
 - **Xray Integration**: Leverages xray-core's vlessenc for secure key generation
 
 **Generated Credentials**:
+
 - `vless_uuid`: Unique identifier for VLESS authentication
 - `vless_encryption`: Public key for encryption
 - `vless_decryption`: Private key for decryption
 - `xhttp_path`: Random HTTP path for obfuscation (50 chars, a-z0-9)
 
 **Configuration Files**:
+
 - `xray-config.json`: Xray-core configuration with VLESS settings
 - `cache.json`: Persistent storage for generated keys and paths
 - `vless.txt`: Subscription URL for client import

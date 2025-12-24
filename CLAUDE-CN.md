@@ -4,7 +4,10 @@
 
 ## 概述
 
-这是一个 Node.js 项目，实现了使用 sing-box 的网络代理服务，支持多种代理协议（TUIC、Hysteria2 和 Reality）。项目专为低内存环境设计（128MB+ RAM），并包含自动每日重启功能以清除缓存。
+这是一个 Node.js 项目，实现了使用 sing-box
+的网络代理服务，支持多种代理协议（TUIC、Hysteria2 和
+Reality）。项目专为低内存环境设计（128MB+
+RAM），并包含自动每日重启功能以清除缓存。
 
 ## 架构和结构
 
@@ -126,12 +129,14 @@
 - **Xray 集成**：利用 xray-core 的 vlessenc 进行安全密钥生成
 
 **生成的凭证**：
+
 - `vless_uuid`：VLESS 认证的唯一标识符
 - `vless_encryption`：加密公钥
 - `vless_decryption`：解密私钥
 - `xhttp_path`：用于混淆的随机 HTTP 路径（50 字符，a-z0-9）
 
 **配置文件**：
+
 - `xray-config.json`：具有 VLESS 设置的 Xray 核心配置
 - `cache.json`：生成密钥和路径的持久化存储
 - `vless.txt`：用于客户端导入的订阅 URL
@@ -287,7 +292,7 @@ node index.js
 
 ```javascript
 // 修改循环次数以更改路径长度
-for (let i = 0; i < 50; i++) {  // 将 50 改为所需长度
+for (let i = 0; i < 50; i++) { // 将 50 改为所需长度
   result += chars.charAt(Math.floor(Math.random() * chars.length));
 }
 ```
@@ -297,7 +302,7 @@ for (let i = 0; i < 50; i++) {  // 将 50 改为所需长度
 编辑 [generateRandomPath.js](generateRandomPath.js) 中的 `chars` 变量：
 
 ```javascript
-const chars = "0123456789abcdefghijklmnopqrstuvwxyz";  // 添加或删除字符
+const chars = "0123456789abcdefghijklmnopqrstuvwxyz"; // 添加或删除字符
 ```
 
 ## 更新日志

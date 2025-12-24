@@ -17,14 +17,22 @@ export function generateVlessKeys(vless_selectedAuth) {
   // Check if cache exists
   if (existsSync(cachePath)) {
     console.log("从缓存读取 vless 配置");
-    const cache = JSON.parse(readFileSync(cachePath, "utf8"));
-    return {
-      vless_uuid: cache.vless_uuid,
-      vless_selectedAuth,
-      vless_encryption: cache.vless_encryption,
-      vless_decryption: cache.vless_decryption,
-      xhttp_path: cache.xhttp_path,
-    };
+    try {
+      const cache = JSON.parse(readFileSync(cachePath, "utf8"));
+      return {
+        vless_uuid: cache.vless_uuid,
+        vless_selectedAuth,
+        vless_encryption: cache.vless_encryption,
+        vless_decryption: cache.vless_decryption,
+        xhttp_path: cache.xhttp_path,
+      };
+    } catch (error) {
+      console.error("读取缓存失败:", error.message);
+      console.log("缓存文件已损坏，将生成新的密钥和 UUID");
+      // 继续执行，生成新的密钥
+    }
+  } else {
+    console.log("缓存文件不存在，将生成新的密钥和 UUID");
   }
 
   console.log("生成新的 vless 密钥和 UUID...");
