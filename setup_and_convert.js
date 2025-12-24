@@ -8,7 +8,7 @@ import https from "https";
 import http from "http";
 import { createWriteStream, createReadStream } from "fs";
 import { unlink } from "fs/promises";
-import { extract } from "unzipper";
+import unzipper from "unzipper";
 
 // 将 exec 方法 Promise 化，以便使用 async/await
 const execPromise = promisify(exec);
@@ -22,33 +22,35 @@ async function downloadFile(url, destPath) {
   return new Promise((resolveDownload, rejectDownload) => {
     const protocol = url.startsWith("https") ? https : http;
 
-    protocol.get(url, (response) => {
-      if (response.statusCode === 302 || response.statusCode === 301) {
-        // 处理重定向
-        downloadFile(response.headers.location, destPath)
-          .then(resolveDownload)
-          .catch(rejectDownload);
-        return;
-      }
+    protocol
+      .get(url, (response) => {
+        if (response.statusCode === 302 || response.statusCode === 301) {
+          // 处理重定向
+          downloadFile(response.headers.location, destPath)
+            .then(resolveDownload)
+            .catch(rejectDownload);
+          return;
+        }
 
-      if (response.statusCode !== 200) {
-        rejectDownload(new Error(`下载失败，状态码: ${response.statusCode}`));
-        return;
-      }
+        if (response.statusCode !== 200) {
+          rejectDownload(new Error(`下载失败，状态码: ${response.statusCode}`));
+          return;
+        }
 
-      const fileStream = createWriteStream(destPath);
-      response.pipe(fileStream);
+        const fileStream = createWriteStream(destPath);
+        response.pipe(fileStream);
 
-      fileStream.on("finish", () => {
-        fileStream.close();
-        resolveDownload();
-      });
+        fileStream.on("finish", () => {
+          fileStream.close();
+          resolveDownload();
+        });
 
-      fileStream.on("error", (err) => {
-        unlink(destPath).catch(() => {});
-        rejectDownload(err);
-      });
-    }).on("error", rejectDownload);
+        fileStream.on("error", (err) => {
+          unlink(destPath).catch(() => {});
+          rejectDownload(err);
+        });
+      })
+      .on("error", rejectDownload);
   });
 }
 
@@ -60,7 +62,7 @@ async function downloadFile(url, destPath) {
 async function extractZip(zipPath, destDir) {
   return new Promise((resolveExtract, rejectExtract) => {
     createReadStream(zipPath)
-      .pipe(extract({ path: destDir }))
+      .pipe(unzipper.Extract({ path: destDir }))
       .on("close", resolveExtract)
       .on("error", rejectExtract);
   });
