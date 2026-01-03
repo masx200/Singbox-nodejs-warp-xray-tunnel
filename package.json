@@ -6,11 +6,7 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "start": "node index.js",
-    "config:webdav-port": "node -e \"import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PORT))\"",
-    "config:webdav-path": "node -e \"import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PATH))\"",
-    "config:webdav-username": "node -e \"import('./config.js').then(m => console.log(m.getconfig().WEBDAV_USERNAME))\"",
-    "config:webdav-password": "node -e \"import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PASSWORD))\""
+    "start": "node index.js"
   },
   "engines": {
     "node": ">=18"

@@ -67,9 +67,12 @@ function startScript(script) {
     stdio: ["pipe", "pipe", "pipe"],
     env: {
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
-
       TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
         "**************************************************",
+      WEBDAV_PORT: getconfig().WEBDAV_PORT ?? 33333,
+      WEBDAV_PATH: getconfig().WEBDAV_PATH ?? "/",
+      WEBDAV_USERNAME: getconfig().WEBDAV_USERNAME ?? "",
+      WEBDAV_PASSWORD: getconfig().WEBDAV_PASSWORD ?? "",
     },
   });
 

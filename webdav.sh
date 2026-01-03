@@ -3,11 +3,11 @@ set -e
 
 echo "webdav start"
 
-# 从 config.js 读取配置
-WEBDAV_PORT=$(npm run config:webdav-port --silent)
-WEBDAV_PATH=$(npm run config:webdav-path --silent)
-WEBDAV_USERNAME=$(npm run config:webdav-username --silent)
-WEBDAV_PASSWORD=$(npm run config:webdav-password --silent)
+# 从环境变量读取配置(由 index.js 传入)
+WEBDAV_PORT=${WEBDAV_PORT:-33333}
+WEBDAV_PATH=${WEBDAV_PATH:-/}
+WEBDAV_USERNAME=${WEBDAV_USERNAME:-}
+WEBDAV_PASSWORD=${WEBDAV_PASSWORD:-}
 
 while true; do
 
