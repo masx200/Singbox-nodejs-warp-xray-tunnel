@@ -21,11 +21,11 @@ export var vless_selectedAuth =
   getconfig().vless_selectedAuth ?? "ML-KEM-768, Post-Quantum";
 
 export const xhttp_host =
-  getconfig().xhttp_host ?? "**************************************";
+  generateVlessKeys().xhttp_host ?? "**************************************";
 
 export const xhttp_path =
   generateVlessKeys().xhttp_path ??
-  "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
+  "/**************************************************";
 
 // Download xray first (needed for key generation)
 downloadXray();
