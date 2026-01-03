@@ -18,7 +18,7 @@ const LOG_CONFIG = {
 function ensureLogDir() {
   if (!fs.existsSync(LOG_CONFIG.logDir)) {
     fs.mkdirSync(LOG_CONFIG.logDir, { recursive: true });
-    console.log(`日志目录创建成功: ${LOG_CONFIG.logDir}`);
+    originalConsole.log(`日志目录创建成功: ${LOG_CONFIG.logDir}`);
   }
 }
 
@@ -57,7 +57,7 @@ function rotateLogs() {
   // 重命名当前日志文件
   fs.renameSync(currentLogPath, archivedLogPath);
 
-  console.log(`日志已轮转: ${archivedLog}`);
+  originalConsole.log(`日志已轮转: ${archivedLog}`);
 
   // 清理旧日志文件
   cleanupOldLogs();
@@ -82,12 +82,19 @@ function cleanupOldLogs() {
   while (logFiles.length >= LOG_CONFIG.maxLogFiles) {
     const oldestLog = logFiles.pop();
     fs.unlinkSync(oldestLog.path);
-    console.log(`删除旧日志: ${oldestLog.name}`);
+    originalConsole.log(`删除旧日志: ${oldestLog.name}`);
   }
 }
 
 // 创建写入流
 let logWriteStream = null;
+
+// 保存原始的console方法，避免递归调用
+const originalConsole = {
+  log: console.log,
+  error: console.error,
+  warn: console.warn,
+};
 
 function getLogWriteStream() {
   if (!logWriteStream) {
@@ -107,21 +114,24 @@ function formatTime() {
 // 自定义日志输出函数
 function log(level, message, ...args) {
   const timestamp = formatTime();
-  const formattedMessage = args.length > 0
-    ? `${message} ${
-      args.map((arg) =>
-        typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-      ).join(" ")
-    }`
-    : String(message);
+  const formattedMessage =
+    args.length > 0
+      ? `${message} ${args
+          .map((arg) =>
+            typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+          )
+          .join(" ")}`
+      : String(message);
 
   const logEntry = `[${timestamp}] [${level}] ${formattedMessage}\n`;
 
-  // 输出到控制台
-  if (level === "ERROR" || level === "WARN") {
-    console[level === "ERROR" ? "error" : "warn"](logEntry.trim());
+  // 输出到控制台（使用原始方法避免递归）
+  if (level === "ERROR") {
+    originalConsole.error(logEntry.trim());
+  } else if (level === "WARN") {
+    originalConsole.warn(logEntry.trim());
   } else {
-    console.log(logEntry.trim());
+    originalConsole.log(logEntry.trim());
   }
 
   // 写入日志文件
@@ -155,35 +165,36 @@ export function debug(message, ...args) {
 
 // 包装console.log和console.error，使其同时写入日志
 export function setupConsoleLogging() {
-  // 保存原始的console方法
-  const originalLog = console.log;
-  const originalError = console.error;
-  const originalWarn = console.warn;
-
   // 重写console.log
   console.log = function (...args) {
-    originalLog.apply(console, args);
-    const message = args.map((arg) =>
-      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-    ).join(" ");
+    originalConsole.log.apply(console, args);
+    const message = args
+      .map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+      )
+      .join(" ");
     log("INFO", message);
   };
 
   // 重写console.error
   console.error = function (...args) {
-    originalError.apply(console, args);
-    const message = args.map((arg) =>
-      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-    ).join(" ");
+    originalConsole.error.apply(console, args);
+    const message = args
+      .map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+      )
+      .join(" ");
     log("ERROR", message);
   };
 
   // 重写console.warn
   console.warn = function (...args) {
-    originalWarn.apply(console, args);
-    const message = args.map((arg) =>
-      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-    ).join(" ");
+    originalConsole.warn.apply(console, args);
+    const message = args
+      .map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+      )
+      .join(" ");
     log("WARN", message);
   };
 }
@@ -225,15 +236,17 @@ export function getLogStats() {
 export function initLogger() {
   ensureLogDir();
   setupConsoleLogging();
-  console.log("日志系统已初始化");
-  console.log(`日志目录: ${LOG_CONFIG.logDir}`);
-  console.log(`最大日志文件大小: ${LOG_CONFIG.maxLogSize / 1024 / 1024} MB`);
-  console.log(`保留日志文件数量: ${LOG_CONFIG.maxLogFiles}`);
+  originalConsole.log("日志系统已初始化");
+  originalConsole.log(`日志目录: ${LOG_CONFIG.logDir}`);
+  originalConsole.log(
+    `最大日志文件大小: ${LOG_CONFIG.maxLogSize / 1024 / 1024} MB`,
+  );
+  originalConsole.log(`保留日志文件数量: ${LOG_CONFIG.maxLogFiles}`);
 }
 
 // 手动触发日志轮转（可用于测试或定时任务）
 export function manualRotate() {
-  console.log("手动触发日志轮转...");
+  originalConsole.log("手动触发日志轮转...");
   rotateLogs();
 }
 

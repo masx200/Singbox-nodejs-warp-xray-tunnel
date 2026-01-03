@@ -20,10 +20,10 @@ export function convertLineEndings(content, toUnix = true) {
   } else {
     // Unix to DOS: 先将所有格式统一为 \n，再将 \n 替换为 \r\n
     // 这样可以避免将已有的 \r\n 重复转换成 \r\r\n
-    return content.replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(
-      /\n/g,
-      "\r\n",
-    );
+    return content
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .replace(/\n/g, "\r\n");
   }
 }
 
