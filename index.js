@@ -9,7 +9,7 @@ import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { updateXrayConfig } from "./updateXrayconfig.js";
 import { closeLogStream, error, info, initLogger, warn } from "./logger.js";
 export { getconfig as config };
-
+import process from "process";
 // 初始化日志系统
 initLogger();
 
@@ -66,6 +66,7 @@ function startScript(script) {
   const bashProcess = spawn("bash", [script], {
     stdio: ["pipe", "pipe", "pipe"],
     env: {
+      WEBDAV_NODE:process.argv[0],
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
       TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
         "**************************************************",
