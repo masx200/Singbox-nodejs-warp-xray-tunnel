@@ -4,10 +4,10 @@ set -e
 echo "webdav start"
 
 # 从 config.js 读取配置
-WEBDAV_PORT=$(node -e "import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PORT))")
-WEBDAV_PATH=$(node -e "import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PATH))")
-WEBDAV_USERNAME=$(node -e "import('./config.js').then(m => console.log(m.getconfig().WEBDAV_USERNAME))")
-WEBDAV_PASSWORD=$(node -e "import('./config.js').then(m => console.log(m.getconfig().WEBDAV_PASSWORD))")
+WEBDAV_PORT=$(npm run config:webdav-port --silent)
+WEBDAV_PATH=$(npm run config:webdav-path --silent)
+WEBDAV_USERNAME=$(npm run config:webdav-username --silent)
+WEBDAV_PASSWORD=$(npm run config:webdav-password --silent)
 
 while true; do
 
