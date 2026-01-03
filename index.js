@@ -7,7 +7,12 @@ import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
 import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { updateXrayConfig } from "./updateXrayconfig.js";
+import { initLogger, info, error, warn, closeLogStream } from "./logger.js";
 export { getconfig as config };
+
+// 初始化日志系统
+initLogger();
+
 import main from "./setup_and_convert.js";
 await main();
 export const vless_port = getconfig().vless_port ?? "20143";
@@ -43,10 +48,9 @@ updateXrayConfig({
 // Download xray before running scripts
 const links = generateVlessSubscription(path.resolve("./xray-config.json"));
 
-console.log("=== VLESS 订阅链接 ===");
+info("=== VLESS 订阅链接 ===");
 links.forEach((link, index) => {
-  console.log(`\n[节点 ${index + 1}]`);
-  console.log(link);
+  info(`节点 ${index + 1}: ${link}`);
 });
 fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
@@ -58,10 +62,10 @@ const processes = new Map();
 
 // 启动脚本的函数
 function startScript(script) {
-  console.log(`启动脚本: ${script}`);
+  info(`启动脚本: ${script}`);
 
   const bashProcess = spawn("bash", [script], {
-    stdio: "inherit",
+    stdio: ["pipe", "pipe", "pipe"],
     env: {
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
 
@@ -74,23 +78,71 @@ function startScript(script) {
   // 存储进程引用
   processes.set(script, bashProcess);
 
-  bashProcess.on("error", (error) => {
-    console.error(`启动 ${script} 失败:`, error);
+  // 用于累积输出行的缓冲区
+  let stdoutBuffer = "";
+  let stderrBuffer = "";
+
+  // 处理子进程 stdout 输出
+  bashProcess.stdout.on("data", (data) => {
+    const text = data.toString();
+    stdoutBuffer += text;
+    
+    // 按行处理日志
+    let lineIndex;
+    while ((lineIndex = stdoutBuffer.indexOf("\n")) !== -1) {
+      const line = stdoutBuffer.substring(0, lineIndex + 1);
+      stdoutBuffer = stdoutBuffer.substring(lineIndex + 1);
+      
+      // 输出到控制台和日志
+      process.stdout.write(`[${script}] ${line}`);
+      info(`[${script}] ${line.trimEnd()}`);
+    }
+  });
+
+  // 处理子进程 stderr 输出
+  bashProcess.stderr.on("data", (data) => {
+    const text = data.toString();
+    stderrBuffer += text;
+    
+    // 按行处理日志
+    let lineIndex;
+    while ((lineIndex = stderrBuffer.indexOf("\n")) !== -1) {
+      const line = stderrBuffer.substring(0, lineIndex + 1);
+      stderrBuffer = stderrBuffer.substring(lineIndex + 1);
+      
+      // 输出到控制台和日志（作为错误）
+      process.stderr.write(`[${script}] ${line}`);
+      error(`[${script}] ${line.trimEnd()}`);
+    }
+  });
+
+  bashProcess.on("error", (err) => {
+    error(`启动 ${script} 失败: ${err.message}`);
     // 5秒后重启
-    console.log(`5秒后尝试重启 ${script}...`);
+    warn(`5秒后尝试重启 ${script}...`);
     setTimeout(() => startScript(script), 5000);
   });
 
   bashProcess.on("close", (code) => {
+    // 处理缓冲区中剩余的输出
+    if (stdoutBuffer.trim()) {
+      process.stdout.write(`[${script}] ${stdoutBuffer}`);
+      info(`[${script}] ${stdoutBuffer.trimEnd()}`);
+    }
+    if (stderrBuffer.trim()) {
+      process.stderr.write(`[${script}] ${stderrBuffer}`);
+      error(`[${script}] ${stderrBuffer.trimEnd()}`);
+    }
+    
     if (code !== 0) {
-      console.error(`${script} 异常退出，退出码: ${code}`);
+      error(`${script} 异常退出，退出码: ${code}`);
       // 5秒后重启
-      console.log(`5秒后尝试重启 ${script}...`);
+      warn(`5秒后尝试重启 ${script}...`);
       setTimeout(() => startScript(script), 5000);
     } else {
-      console.log(`${script} 正常完成`);
+      info(`${script} 正常完成`);
       // 正常退出也重启（保持服务运行）
-      console.log(`5秒后重启 ${script}...`);
+      info(`5秒后重启 ${script}...`);
       setTimeout(() => startScript(script), 5000);
     }
   });
@@ -103,19 +155,21 @@ for (const script of scripts) {
 
 // 处理主进程退出信号
 process.on("SIGINT", () => {
-  console.log("\n收到 SIGINT 信号，正在关闭所有进程...");
+  info("收到 SIGINT 信号，正在关闭所有进程...");
   for (const [script, proc] of processes) {
-    console.log(`停止 ${script}...`);
+    info(`停止 ${script}...`);
     proc.kill();
   }
+  closeLogStream();
   process.exit(0);
 });
 
 process.on("SIGTERM", () => {
-  console.log("\n收到 SIGTERM 信号，正在关闭所有进程...");
+  info("收到 SIGTERM 信号，正在关闭所有进程...");
   for (const [script, proc] of processes) {
-    console.log(`停止 ${script}...`);
+    info(`停止 ${script}...`);
     proc.kill();
   }
+  closeLogStream();
   process.exit(0);
 });
