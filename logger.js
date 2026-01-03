@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 // 日志配置
 const LOG_CONFIG = {
   logDir: path.resolve(__dirname, "logs"), // 日志目录
-  maxLogSize: 10 * 1024 * 1024, // 最大日志文件大小（10MB）
+  maxLogSize: 1 * 1024 * 1024, // 最大日志文件大小（10MB）
   maxLogFiles: 10, // 保留的日志文件数量
   currentLog: "app.log", // 当前日志文件名
 };
