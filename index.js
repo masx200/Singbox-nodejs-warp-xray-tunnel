@@ -7,7 +7,7 @@ import { downloadXray } from "./downloadXray.js";
 import { generateVlessKeys } from "./generateVlessKeys.js";
 import { generateVlessSubscription } from "./generateVlessSubscription.js";
 import { updateXrayConfig } from "./updateXrayconfig.js";
-import { initLogger, info, error, warn, closeLogStream } from "./logger.js";
+import { closeLogStream, error, info, initLogger, warn } from "./logger.js";
 export { getconfig as config };
 
 // 初始化日志系统
@@ -17,14 +17,13 @@ import main from "./setup_and_convert.js";
 await main();
 export const vless_port = getconfig().vless_port ?? "20143";
 
-export var vless_selectedAuth =
-  getconfig().vless_selectedAuth ?? "ML-KEM-768, Post-Quantum";
+export var vless_selectedAuth = getconfig().vless_selectedAuth ??
+  "ML-KEM-768, Post-Quantum";
 
-export const xhttp_host =
-  getconfig().xhttp_host ?? "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io";
+export const xhttp_host = getconfig().xhttp_host ??
+  "**************************************";
 
-export const xhttp_path =
-  generateVlessKeys().xhttp_path ??
+export const xhttp_path = generateVlessKeys().xhttp_path ??
   "/p7su4vcy2evvtcrvb3d2fcyw8sx62jqrx5s9r7h14d04q46nxv";
 
 // Download xray first (needed for key generation)
@@ -55,7 +54,7 @@ links.forEach((link, index) => {
 fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
 });
-const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh"];
+const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh", "webdav.sh"];
 
 // 存储所有进程引用
 const processes = new Map();
@@ -69,9 +68,8 @@ function startScript(script) {
     env: {
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
 
-      TUNNEL_TOKEN:
-        getconfig().TUNNEL_TOKEN ??
-        "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
+      TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
+        "**************************************************",
     },
   });
 
@@ -86,13 +84,13 @@ function startScript(script) {
   bashProcess.stdout.on("data", (data) => {
     const text = data.toString();
     stdoutBuffer += text;
-    
+
     // 按行处理日志
     let lineIndex;
     while ((lineIndex = stdoutBuffer.indexOf("\n")) !== -1) {
       const line = stdoutBuffer.substring(0, lineIndex + 1);
       stdoutBuffer = stdoutBuffer.substring(lineIndex + 1);
-      
+
       // 输出到控制台和日志
       process.stdout.write(`[${script}] ${line}`);
       info(`[${script}] ${line.trimEnd()}`);
@@ -103,13 +101,13 @@ function startScript(script) {
   bashProcess.stderr.on("data", (data) => {
     const text = data.toString();
     stderrBuffer += text;
-    
+
     // 按行处理日志
     let lineIndex;
     while ((lineIndex = stderrBuffer.indexOf("\n")) !== -1) {
       const line = stderrBuffer.substring(0, lineIndex + 1);
       stderrBuffer = stderrBuffer.substring(lineIndex + 1);
-      
+
       // 输出到控制台和日志（作为错误）
       process.stderr.write(`[${script}] ${line}`);
       error(`[${script}] ${line.trimEnd()}`);
@@ -133,7 +131,7 @@ function startScript(script) {
       process.stderr.write(`[${script}] ${stderrBuffer}`);
       error(`[${script}] ${stderrBuffer.trimEnd()}`);
     }
-    
+
     if (code !== 0) {
       error(`${script} 异常退出，退出码: ${code}`);
       // 5秒后重启

@@ -5,9 +5,13 @@ export function getconfig() {
     vless_selectedAuth: "ML-KEM-768, Post-Quantum",
     HY2_PORT: 20143,
     // xhttp_path: generateRandomPath(),
-    xhttp_host: "6ph52d3svb3e71q.6ph52d3svb3e71q.qzz.io",
+    xhttp_host: "**************************************",
     vless_port: "20143",
-    TUNNEL_TOKEN: "bzqtevdz0gcd0fianl5wrv2rar56jixjzgrkacc8xnx7ge1ub6",
+    TUNNEL_TOKEN: "**************************************************",
+    WEBDAV_PORT: 33333,
+    WEBDAV_PATH: "/",
+    WEBDAV_USERNAME: "***************",
+    WEBDAV_PASSWORD: "***************",
   };
   return config;
 }

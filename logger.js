@@ -30,14 +30,14 @@ function getLogPath(filename) {
 // 检查并执行日志轮转
 function checkLogRotation() {
   const currentLogPath = getLogPath(LOG_CONFIG.currentLog);
-  
+
   // 如果当前日志文件不存在，无需轮转
   if (!fs.existsSync(currentLogPath)) {
     return;
   }
-  
+
   const stats = fs.statSync(currentLogPath);
-  
+
   // 如果日志文件大小超过最大值，执行轮转
   if (stats.size >= LOG_CONFIG.maxLogSize) {
     rotateLogs();
@@ -48,17 +48,17 @@ function checkLogRotation() {
 function rotateLogs() {
   const currentLogPath = getLogPath(LOG_CONFIG.currentLog);
   const now = new Date();
-  
+
   // 生成带时间戳的日志文件名
   const timestamp = now.toISOString().replace(/[:.]/g, "-");
   const archivedLog = `app-${timestamp}.log`;
   const archivedLogPath = getLogPath(archivedLog);
-  
+
   // 重命名当前日志文件
   fs.renameSync(currentLogPath, archivedLogPath);
-  
+
   console.log(`日志已轮转: ${archivedLog}`);
-  
+
   // 清理旧日志文件
   cleanupOldLogs();
 }
@@ -67,7 +67,7 @@ function rotateLogs() {
 function cleanupOldLogs() {
   const logDir = LOG_CONFIG.logDir;
   const files = fs.readdirSync(logDir);
-  
+
   // 过滤出归档的日志文件（app-开头的.log文件）
   const logFiles = files
     .filter((file) => file.startsWith("app-") && file.endsWith(".log"))
@@ -77,7 +77,7 @@ function cleanupOldLogs() {
       mtime: fs.statSync(path.join(logDir, file)).mtime,
     }))
     .sort((a, b) => b.mtime - a.mtime); // 按修改时间降序排列
-  
+
   // 如果日志文件数量超过限制，删除最旧的
   while (logFiles.length >= LOG_CONFIG.maxLogFiles) {
     const oldestLog = logFiles.pop();
@@ -107,24 +107,28 @@ function formatTime() {
 // 自定义日志输出函数
 function log(level, message, ...args) {
   const timestamp = formatTime();
-  const formattedMessage = args.length > 0 
-    ? `${message} ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ')}`
+  const formattedMessage = args.length > 0
+    ? `${message} ${
+      args.map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+      ).join(" ")
+    }`
     : String(message);
-  
+
   const logEntry = `[${timestamp}] [${level}] ${formattedMessage}\n`;
-  
+
   // 输出到控制台
   if (level === "ERROR" || level === "WARN") {
     console[level === "ERROR" ? "error" : "warn"](logEntry.trim());
   } else {
     console.log(logEntry.trim());
   }
-  
+
   // 写入日志文件
   try {
     const stream = getLogWriteStream();
     stream.write(logEntry);
-    
+
     // 检查是否需要日志轮转
     checkLogRotation();
   } catch (error) {
@@ -155,25 +159,31 @@ export function setupConsoleLogging() {
   const originalLog = console.log;
   const originalError = console.error;
   const originalWarn = console.warn;
-  
+
   // 重写console.log
   console.log = function (...args) {
     originalLog.apply(console, args);
-    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+    const message = args.map((arg) =>
+      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+    ).join(" ");
     log("INFO", message);
   };
-  
+
   // 重写console.error
   console.error = function (...args) {
     originalError.apply(console, args);
-    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+    const message = args.map((arg) =>
+      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+    ).join(" ");
     log("ERROR", message);
   };
-  
+
   // 重写console.warn
   console.warn = function (...args) {
     originalWarn.apply(console, args);
-    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+    const message = args.map((arg) =>
+      typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+    ).join(" ");
     log("WARN", message);
   };
 }
@@ -191,7 +201,7 @@ export function getLogStats() {
   ensureLogDir();
   const files = fs.readdirSync(LOG_CONFIG.logDir);
   const logFiles = files.filter((file) => file.endsWith(".log"));
-  
+
   let totalSize = 0;
   const fileStats = logFiles.map((file) => {
     const filePath = path.join(LOG_CONFIG.logDir, file);
@@ -203,7 +213,7 @@ export function getLogStats() {
       mtime: stats.mtime,
     };
   });
-  
+
   return {
     totalFiles: logFiles.length,
     totalSize: (totalSize / 1024 / 1024).toFixed(2) + " MB",
