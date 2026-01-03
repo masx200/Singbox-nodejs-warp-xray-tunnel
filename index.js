@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
-
-
-const scripts = [ "webdav.sh","warp.sh", "xray.sh", "start.sh", "tunnel.sh","monitor.sh"];
-
-
+const scripts = [
+  "webdav.sh",
+  "warp.sh",
+  "xray.sh",
+  "start.sh",
+  "tunnel.sh",
+  "monitor.sh",
+];
 
 import { spawn } from "child_process";
 import fs from "fs";
@@ -62,7 +65,6 @@ fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
 });
 
-
 // 存储所有进程引用
 const processes = new Map();
 
@@ -73,7 +75,7 @@ function startScript(script) {
   const bashProcess = spawn("bash", [script], {
     stdio: ["pipe", "pipe", "pipe"],
     env: {
-      WEBDAV_NODE:process.argv[0],
+      WEBDAV_NODE: process.argv[0],
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
       TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
         "**************************************************",
