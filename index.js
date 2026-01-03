@@ -54,7 +54,7 @@ links.forEach((link, index) => {
 fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
 });
-const scripts = ["warp.sh", "xray.sh", "start.sh", "tunnel.sh", "webdav.sh"];
+const scripts = [ "webdav.sh","warp.sh", "xray.sh", "start.sh", "tunnel.sh",];
 
 // 存储所有进程引用
 const processes = new Map();
