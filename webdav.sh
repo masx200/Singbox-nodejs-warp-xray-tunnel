@@ -16,7 +16,7 @@ echo "WEBDAV_NODE=$WEBDAV_NODE"
 
 while true; do
 
-  $WEBDAV_NODE  ./node_modules/@masx200/webdav-cli/dist/index.js --port "$WEBDAV_PORT" --path="$WEBDAV_PATH" --username="$WEBDAV_USERNAME" --password="$WEBDAV_PASSWORD"
+  $WEBDAV_NODE  ./node_modules/@masx200/webdav-cli/dist/webdav-cli.cli.js --port "$WEBDAV_PORT" --path="$WEBDAV_PATH" --username="$WEBDAV_USERNAME" --password="$WEBDAV_PASSWORD"
 
     sleep 10
 done
