@@ -1,11 +1,9 @@
-// import { generateRandomPath } from path.resolve("./generateRandomPath.js";
-
 export function getconfig() {
   const config = {
     vless_selectedAuth: "ML-KEM-768, Post-Quantum",
     HY2_PORT: 20143,
-    // xhttp_path: generateRandomPath(),
-    // xhttp_host: "**************************************",
+
+    xhttp_host: "**************************************",
     vless_port: "20143",
     TUNNEL_TOKEN: "**************************************************",
     WEBDAV_PORT: 33333,

@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
-import { vless_port, xhttp_host /* xhttp_path */ } from "./index.js";
+import { get_xhttp_host, /* xhttp_path */ vless_port } from "./index.js";
 // import { getconfig } from path.resolve("./config.js";
 /**
  * Update xray-config.json with vless configuration
@@ -37,7 +37,7 @@ export function updateXrayConfig({
   vlessInbound.settings.decryption = vless_decryption;
 
   // Update xhttp settings
-  vlessInbound.streamSettings.xhttpSettings.host = xhttp_host;
+  vlessInbound.streamSettings.xhttpSettings.host = get_xhttp_host();
   vlessInbound.streamSettings.xhttpSettings.path = xhttp_path;
 
   // Write back to file

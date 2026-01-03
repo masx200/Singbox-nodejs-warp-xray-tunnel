@@ -17,14 +17,13 @@ import main from "./setup_and_convert.js";
 await main();
 export const vless_port = getconfig().vless_port ?? "20143";
 
-export var vless_selectedAuth =
-  getconfig().vless_selectedAuth ?? "ML-KEM-768, Post-Quantum";
+export var vless_selectedAuth = getconfig().vless_selectedAuth ??
+  "ML-KEM-768, Post-Quantum";
 
-export const xhttp_host =
-  generateVlessKeys().xhttp_host ?? "**************************************";
-
-export const xhttp_path =
-  generateVlessKeys().xhttp_path ??
+export function get_xhttp_host() {
+  return getconfig().xhttp_host ?? "**************************************";
+}
+export const xhttp_path = generateVlessKeys().xhttp_path ??
   "/**************************************************";
 
 // Download xray first (needed for key generation)
@@ -69,8 +68,7 @@ function startScript(script) {
     env: {
       HY2_PORT: getconfig().HY2_PORT ?? 20143,
 
-      TUNNEL_TOKEN:
-        getconfig().TUNNEL_TOKEN ??
+      TUNNEL_TOKEN: getconfig().TUNNEL_TOKEN ??
         "**************************************************",
     },
   });

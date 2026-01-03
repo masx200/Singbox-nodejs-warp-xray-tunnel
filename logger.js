@@ -114,14 +114,15 @@ function formatTime() {
 // 自定义日志输出函数
 function log(level, message, ...args) {
   const timestamp = formatTime();
-  const formattedMessage =
-    args.length > 0
-      ? `${message} ${args
-          .map((arg) =>
-            typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-          )
-          .join(" ")}`
-      : String(message);
+  const formattedMessage = args.length > 0
+    ? `${message} ${
+      args
+        .map((arg) =>
+          typeof arg === "object" ? JSON.stringify(arg) : String(arg)
+        )
+        .join(" ")
+    }`
+    : String(message);
 
   const logEntry = `[${timestamp}] [${level}] ${formattedMessage}\n`;
 
@@ -169,9 +170,7 @@ export function setupConsoleLogging() {
   console.log = function (...args) {
     originalConsole.log.apply(console, args);
     const message = args
-      .map((arg) =>
-        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-      )
+      .map((arg) => typeof arg === "object" ? JSON.stringify(arg) : String(arg))
       .join(" ");
     log("INFO", message);
   };
@@ -180,9 +179,7 @@ export function setupConsoleLogging() {
   console.error = function (...args) {
     originalConsole.error.apply(console, args);
     const message = args
-      .map((arg) =>
-        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-      )
+      .map((arg) => typeof arg === "object" ? JSON.stringify(arg) : String(arg))
       .join(" ");
     log("ERROR", message);
   };
@@ -191,9 +188,7 @@ export function setupConsoleLogging() {
   console.warn = function (...args) {
     originalConsole.warn.apply(console, args);
     const message = args
-      .map((arg) =>
-        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-      )
+      .map((arg) => typeof arg === "object" ? JSON.stringify(arg) : String(arg))
       .join(" ");
     log("WARN", message);
   };

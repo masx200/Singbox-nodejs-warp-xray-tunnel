@@ -238,7 +238,7 @@ Example (with concurrency of 5):
 
 ```js
 unzip.Open.file("path/to/archive.zip").then((d) =>
-  d.extract({ path: "/extraction/path", concurrency: 5 }),
+  d.extract({ path: "/extraction/path", concurrency: 5 })
 );
 ```
 
