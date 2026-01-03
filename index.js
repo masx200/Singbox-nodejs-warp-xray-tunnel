@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+
+
+
+const scripts = [ "webdav.sh","warp.sh", "xray.sh", "start.sh", "tunnel.sh","monitor.sh"];
+
+
+
 import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
@@ -54,7 +61,7 @@ links.forEach((link, index) => {
 fs.writeFileSync(path.resolve("./vless_subscription.txt"), links.join("\n"), {
   encoding: "utf-8",
 });
-const scripts = [ "webdav.sh","warp.sh", "xray.sh", "start.sh", "tunnel.sh",];
+
 
 // 存储所有进程引用
 const processes = new Map();
