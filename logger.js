@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 // 日志配置
 const LOG_CONFIG = {
   logDir: path.resolve(__dirname, "logs"), // 日志目录
-  maxLogSize: 1 * 1024 * 1024, // 最大日志文件大小（10MB）
+  maxLogSize: 2 * 1024 * 1024, // 最大日志文件大小（10MB）
   maxLogFiles: 10, // 保留的日志文件数量
   currentLog: "app.log", // 当前日志文件名
 };
@@ -27,19 +27,10 @@ function getLogPath(filename) {
   return path.join(LOG_CONFIG.logDir, filename);
 }
 
-// 检查并执行日志轮转
+// 检查并执行日志轮转（基于已写入的字节数）
 function checkLogRotation() {
-  const currentLogPath = getLogPath(LOG_CONFIG.currentLog);
-
-  // 如果当前日志文件不存在，无需轮转
-  if (!fs.existsSync(currentLogPath)) {
-    return;
-  }
-
-  const stats = fs.statSync(currentLogPath);
-
-  // 如果日志文件大小超过最大值，执行轮转
-  if (stats.size >= LOG_CONFIG.maxLogSize) {
+  // 如果当前日志大小超过最大值，执行轮转
+  if (currentLogSize >= LOG_CONFIG.maxLogSize) {
     rotateLogs();
   }
 }
@@ -47,6 +38,13 @@ function checkLogRotation() {
 // 执行日志轮转
 function rotateLogs() {
   const currentLogPath = getLogPath(LOG_CONFIG.currentLog);
+
+  // 关闭当前的写入流
+  if (logWriteStream) {
+    logWriteStream.end();
+    logWriteStream = null;
+  }
+
   const now = new Date();
 
   // 生成带时间戳的日志文件名
@@ -55,9 +53,13 @@ function rotateLogs() {
   const archivedLogPath = getLogPath(archivedLog);
 
   // 重命名当前日志文件
-  fs.renameSync(currentLogPath, archivedLogPath);
+  if (fs.existsSync(currentLogPath)) {
+    fs.renameSync(currentLogPath, archivedLogPath);
+    originalConsole.log(`日志已轮转: ${archivedLog}`);
+  }
 
-  originalConsole.log(`日志已轮转: ${archivedLog}`);
+  // 重置日志大小计数
+  currentLogSize = 0;
 
   // 清理旧日志文件
   cleanupOldLogs();
@@ -88,6 +90,7 @@ function cleanupOldLogs() {
 
 // 创建写入流
 let logWriteStream = null;
+let currentLogSize = 0; // 跟踪当前日志文件已写入的字节数
 
 // 保存原始的console方法，避免递归调用
 const originalConsole = {
@@ -100,6 +103,15 @@ function getLogWriteStream() {
   if (!logWriteStream) {
     ensureLogDir();
     const currentLogPath = getLogPath(LOG_CONFIG.currentLog);
+
+    // 检查文件是否已存在，如果存在则获取当前大小
+    if (fs.existsSync(currentLogPath)) {
+      const stats = fs.statSync(currentLogPath);
+      currentLogSize = stats.size;
+    } else {
+      currentLogSize = 0;
+    }
+
     logWriteStream = fs.createWriteStream(currentLogPath, { flags: "a" });
   }
   return logWriteStream;
@@ -137,11 +149,18 @@ function log(level, message, ...args) {
 
   // 写入日志文件
   try {
-    const stream = getLogWriteStream();
-    stream.write(logEntry);
-
-    // 检查是否需要日志轮转
+    // 先检查是否需要轮转（在写入之前）
     checkLogRotation();
+
+    // 获取写入流（如果轮转发生过，会返回新的流）
+    const stream = getLogWriteStream();
+
+    // 写入数据并记录字节数
+    const written = stream.write(logEntry);
+    if (written) {
+      // 获取日志条目的字节长度（使用 Buffer.byteLength 正确处理多字节字符）
+      currentLogSize += Buffer.byteLength(logEntry, "utf8");
+    }
   } catch (error) {
     console.error("写入日志文件失败:", error);
   }
